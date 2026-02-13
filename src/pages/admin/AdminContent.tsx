@@ -1,0 +1,141 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Plus, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
+interface SiteContent {
+  id: string;
+  section_key: string;
+  title: string | null;
+  subtitle: string | null;
+  content: string | null;
+  image_url: string | null;
+  cta_text: string | null;
+  cta_link: string | null;
+  is_active: boolean;
+}
+
+const AdminContent = () => {
+  const [contents, setContents] = useState<SiteContent[]>([]);
+  const [editing, setEditing] = useState<Partial<SiteContent> | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const fetchContent = async () => {
+    const { data, error } = await supabase.from("site_content" as any).select("*").order("section_key");
+    if (error) toast.error(error.message);
+    else setContents((data as any) || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchContent(); }, []);
+
+  const handleSave = async () => {
+    if (!editing) return;
+    const payload = {
+      section_key: editing.section_key,
+      title: editing.title || null,
+      subtitle: editing.subtitle || null,
+      content: editing.content || null,
+      image_url: editing.image_url || null,
+      cta_text: editing.cta_text || null,
+      cta_link: editing.cta_link || null,
+      is_active: editing.is_active ?? true,
+    };
+
+    if (editing.id) {
+      const { error } = await supabase.from("site_content" as any).update(payload).eq("id", editing.id);
+      if (error) return toast.error(error.message);
+      toast.success("Content updated");
+    } else {
+      const { error } = await supabase.from("site_content" as any).insert(payload);
+      if (error) return toast.error(error.message);
+      toast.success("Content created");
+    }
+    setDialogOpen(false);
+    setEditing(null);
+    fetchContent();
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this content block?")) return;
+    const { error } = await supabase.from("site_content" as any).delete().eq("id", id);
+    if (error) toast.error(error.message);
+    else { toast.success("Deleted"); fetchContent(); }
+  };
+
+  return (
+    <div>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="font-display text-2xl font-bold text-foreground">Site Content</h1>
+        <Button variant="electric" onClick={() => { setEditing({ section_key: "", title: "", subtitle: "", content: "", image_url: "", cta_text: "", cta_link: "", is_active: true }); setDialogOpen(true); }}>
+          <Plus className="mr-2 h-4 w-4" />Add Content Block
+        </Button>
+      </div>
+
+      {loading ? <p className="text-muted-foreground">Loading...</p> : (
+        <div className="rounded-lg border border-border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Section Key</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Active</TableHead>
+                <TableHead className="w-24">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {contents.map((c) => (
+                <TableRow key={c.id}>
+                  <TableCell className="font-medium font-mono text-sm">{c.section_key}</TableCell>
+                  <TableCell>{c.title || "—"}</TableCell>
+                  <TableCell>{c.is_active ? "✅" : "❌"}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => { setEditing({ ...c }); setDialogOpen(true); }}><Pencil className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {contents.length === 0 && <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No content blocks yet</TableCell></TableRow>}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editing?.id ? "Edit Content" : "New Content Block"}</DialogTitle></DialogHeader>
+          {editing && (
+            <div className="space-y-4">
+              <div><Label>Section Key</Label><Input value={editing.section_key || ""} onChange={(e) => setEditing({ ...editing, section_key: e.target.value })} placeholder="e.g. hero, banner, newsletter" /></div>
+              <div><Label>Title</Label><Input value={editing.title || ""} onChange={(e) => setEditing({ ...editing, title: e.target.value })} /></div>
+              <div><Label>Subtitle</Label><Input value={editing.subtitle || ""} onChange={(e) => setEditing({ ...editing, subtitle: e.target.value })} /></div>
+              <div><Label>Content</Label><Textarea rows={6} value={editing.content || ""} onChange={(e) => setEditing({ ...editing, content: e.target.value })} /></div>
+              <div><Label>Image URL</Label><Input value={editing.image_url || ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value })} /></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div><Label>CTA Text</Label><Input value={editing.cta_text || ""} onChange={(e) => setEditing({ ...editing, cta_text: e.target.value })} /></div>
+                <div><Label>CTA Link</Label><Input value={editing.cta_link || ""} onChange={(e) => setEditing({ ...editing, cta_link: e.target.value })} /></div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch checked={editing.is_active ?? true} onCheckedChange={(v) => setEditing({ ...editing, is_active: v })} />
+                <Label>Active</Label>
+              </div>
+              <Button variant="electric" className="w-full" onClick={handleSave}>Save Content</Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default AdminContent;
