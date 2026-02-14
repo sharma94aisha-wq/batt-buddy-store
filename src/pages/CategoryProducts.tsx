@@ -167,12 +167,7 @@ const CategoryProducts = () => {
           </div>
 
           <div className="flex gap-8">
-            {/* Desktop Sidebar */}
-            <aside className="hidden w-64 shrink-0 lg:block">
-              <div className="sticky top-8 rounded-xl border border-border bg-card p-6">
-                <FilterSidebar />
-              </div>
-            </aside>
+            {/* Products Grid */}
 
             {/* Mobile Filters Overlay */}
             {showMobileFilters && (
@@ -217,6 +212,13 @@ const CategoryProducts = () => {
                 </div>
               )}
             </div>
+
+            {/* Desktop Sidebar - Right Side */}
+            <aside className="hidden w-64 shrink-0 lg:block">
+              <div className="sticky top-8 rounded-xl border border-border bg-card p-6">
+                <FilterSidebar />
+              </div>
+            </aside>
           </div>
         </div>
       </main>
