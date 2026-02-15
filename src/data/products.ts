@@ -8,6 +8,7 @@ export type ProductCategory = "charger" | "jump-starter" | "compressor";
 export interface Product {
   id: number;
   image: string;
+  images?: string[];
   name: string;
   price: number;
   originalPrice?: number;
@@ -16,6 +17,10 @@ export interface Product {
   badge?: string;
   category: ProductCategory;
   brand: string;
+  description?: string;
+  specs?: Record<string, string>;
+  sku?: string;
+  inStock?: boolean;
 }
 
 export const categoryLabels: Record<ProductCategory, string> = {
