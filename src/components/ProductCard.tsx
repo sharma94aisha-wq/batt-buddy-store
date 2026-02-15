@@ -1,4 +1,5 @@
 import { ShoppingCart, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 
@@ -21,7 +22,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-glow">
+    <Link to={`/product/${id}`} className="group relative block overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-glow">
       {/* Badge */}
       {badge && (
         <div className="absolute left-3 top-3 z-10 rounded-full bg-primary px-3 py-1">
@@ -38,7 +39,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
         />
         {/* Quick add overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-background/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Button variant="electric" size="sm" onClick={handleAddToCart}>
+          <Button variant="electric" size="sm" onClick={(e) => { e.preventDefault(); handleAddToCart(); }}>
             <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart
           </Button>
@@ -76,7 +77,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
