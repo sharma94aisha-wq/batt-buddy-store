@@ -18,6 +18,14 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminCategories from "./pages/admin/AdminCategories";
 import AdminPages from "./pages/admin/AdminPages";
 import AdminContent from "./pages/admin/AdminContent";
+import ContactUs from "./pages/ContactUs";
+import FAQ from "./pages/FAQ";
+import ShippingInfo from "./pages/ShippingInfo";
+import Returns from "./pages/Returns";
+import Warranty from "./pages/Warranty";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import CookiePolicy from "./pages/CookiePolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +44,14 @@ const App = () => (
               <Route path="/category/:slug" element={<CategoryProducts />} />
               <Route path="/product/:id" element={<ProductDetail />} />
               <Route path="/order-confirmation" element={<OrderConfirmation />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/shipping" element={<ShippingInfo />} />
+              <Route path="/returns" element={<Returns />} />
+              <Route path="/warranty" element={<Warranty />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/cookies" element={<CookiePolicy />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
                 <Route index element={<AdminDashboard />} />
