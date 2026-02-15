@@ -37,17 +37,10 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
           alt={name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        {/* Quick add overlay */}
-        <div className="absolute inset-0 flex items-center justify-center bg-background/80 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Button variant="electric" size="sm" onClick={(e) => { e.preventDefault(); handleAddToCart(); }}>
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Add to Cart
-          </Button>
-        </div>
       </div>
       
       {/* Content */}
-      <div className="p-4">
+      <div className="flex flex-1 flex-col p-4">
         <h3 className="mb-2 font-display text-sm font-semibold tracking-wide text-foreground line-clamp-2">
           {name}
         </h3>
@@ -69,12 +62,17 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
           <span className="text-xs text-muted-foreground">({reviews})</span>
         </div>
         
-        {/* Price */}
-        <div className="flex items-center gap-2">
-          <span className="font-display text-lg font-bold text-primary">${price.toFixed(2)}</span>
-          {originalPrice && (
-            <span className="text-sm text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
-          )}
+        {/* Price & Add to Cart */}
+        <div className="mt-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="font-display text-lg font-bold text-primary">${price.toFixed(2)}</span>
+            {originalPrice && (
+              <span className="text-sm text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
+            )}
+          </div>
+          <Button variant="electric" size="icon" className="h-9 w-9 shrink-0" onClick={(e) => { e.preventDefault(); handleAddToCart(); }}>
+            <ShoppingCart className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </Link>
