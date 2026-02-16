@@ -52,7 +52,7 @@ const CategoryProducts = () => {
           .select("*")
           .eq("category_id", cat.id)
           .eq("is_active", true)
-          .order("sort_order");
+          .order("stock_quantity", { ascending: false });
         if (prods) setProducts(prods as unknown as DBProduct[]);
       }
       setLoading(false);
@@ -89,7 +89,7 @@ const CategoryProducts = () => {
       case "price-desc": return [...result].sort((a, b) => b.price - a.price);
       case "rating": return [...result].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
       case "name": return [...result].sort((a, b) => a.name.localeCompare(b.name));
-      default: return result;
+      default: return [...result].sort((a, b) => b.stock_quantity - a.stock_quantity);
     }
   }, [products, priceRange, selectedBrands, sortBy]);
 
