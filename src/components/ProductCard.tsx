@@ -75,7 +75,12 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
         {/* Stock */}
         {stockQuantity !== undefined && (
           <div className="mb-3">
-            <span className={`text-xs font-medium ${stockQuantity > 0 ? "text-green-500" : "text-destructive"}`}>
+            <span className={`text-xs font-medium ${
+              stockQuantity === 0 ? "text-destructive"
+              : stockQuantity <= 2 ? "text-red-500"
+              : stockQuantity <= 4 ? "text-orange-500"
+              : "text-green-500"
+            }`}>
               {stockQuantity === 0
                 ? "Out of stock"
                 : stockQuantity > 5
