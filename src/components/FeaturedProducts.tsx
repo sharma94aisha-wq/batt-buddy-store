@@ -27,7 +27,7 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const fetchData = async () => {
       const [prodRes, catRes] = await Promise.all([
-        supabase.from("products").select("*").eq("is_active", true).order("sort_order"),
+        supabase.from("products").select("*").eq("is_active", true).order("stock_quantity", { ascending: false }),
         supabase.from("categories").select("id, name, slug").order("sort_order"),
       ]);
       if (prodRes.data) setProducts(prodRes.data as unknown as DBProduct[]);
