@@ -67,6 +67,24 @@ const SuggestedProducts = ({ categoryId, currentId }: { categoryId: string | nul
   );
 };
 
+const allReviews = [
+  { author: "Ján D.", date: "pred 2 týždňami", rating: 5, text: "Výborný produkt! Funguje presne ako je popísané. Veľmi spoľahlivý a jednoduchý na použitie." },
+  { author: "Zuzana M.", date: "pred 1 mesiacom", rating: 4.8, text: "Skvelá hodnota za cenu. Solídna kvalita a funguje dobre. Odporúčam." },
+  { author: "Michal R.", date: "pred 2 mesiacmi", rating: 5, text: "Používam to už niekoľko mesiacov. Žiadne problémy. Vysoká kvalita." },
+  { author: "Peter K.", date: "pred 2 mesiacmi", rating: 4.7, text: "Veľmi spokojný s nákupom. Doručenie bolo rýchle a produkt je presne taký, aký som očakával." },
+  { author: "Mária H.", date: "pred 3 mesiacmi", rating: 5, text: "Kúpila som to ako darček a obdarovaný bol nadšený. Kvalitné spracovanie." },
+  { author: "Tomáš B.", date: "pred 3 mesiacmi", rating: 4.6, text: "Dobrý produkt za rozumnú cenu. Funguje spoľahlivo, aj keď návod mohol byť podrobnejší." },
+  { author: "Eva S.", date: "pred 3 mesiacmi", rating: 4.9, text: "Používam denne a som maximálne spokojná. Odporúčam každému." },
+  { author: "Martin L.", date: "pred 4 mesiacmi", rating: 5, text: "Profesionálna kvalita. Presne to, čo som hľadal pre svoju dielňu." },
+  { author: "Katarína N.", date: "pred 4 mesiacmi", rating: 4.5, text: "Splnilo moje očakávania. Jednoduchá obsluha a kompaktný dizajn." },
+  { author: "Lukáš P.", date: "pred 5 mesiacmi", rating: 4.8, text: "Už druhýkrát objednávam z tohto obchodu. Vždy spoľahlivé produkty." },
+  { author: "Andrea V.", date: "pred 5 mesiacmi", rating: 5, text: "Najlepší nákup za posledné mesiace. Kvalita predčila moje očakávania." },
+  { author: "Róbert J.", date: "pred 6 mesiacmi", rating: 4.7, text: "Stabilný výkon a pekný dizajn. Za túto cenu výborná voľba." },
+  { author: "Jana F.", date: "pred 6 mesiacmi", rating: 4.9, text: "Skvelé! Rýchle doručenie, produkt funguje bezchybne od prvého dňa." },
+  { author: "Dávid T.", date: "pred 7 mesiacmi", rating: 4.6, text: "Solídny produkt. Trochu hlučnejší než som čakal, ale výkon je výborný." },
+  { author: "Monika G.", date: "pred 8 mesiacmi", rating: 5, text: "Perfektné! Používam to pravidelne a zatiaľ žiadna porucha. Vrelo odporúčam." },
+];
+
 const ProductDetail = () => {
   const { id: slugParam } = useParams<{ id: string }>();
   const { addToCart } = useCart();
@@ -75,7 +93,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-
+  const [visibleReviews, setVisibleReviews] = useState(3);
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
@@ -320,19 +338,27 @@ const ProductDetail = () => {
                     <p className="mt-1 text-xs text-muted-foreground">{product.reviews_count ?? 0} recenzií</p>
                   </div>
                 </div>
-                {[
-                  { author: "Ján D.", date: "pred 2 týždňami", rating: 5, text: "Výborný produkt! Funguje presne ako je popísané. Veľmi spoľahlivý a jednoduchý na použitie." },
-                  { author: "Zuzana M.", date: "pred 1 mesiacom", rating: 4, text: "Skvelá hodnota za cenu. Solídna kvalita a funguje dobre. Odporúčam." },
-                  { author: "Michal R.", date: "pred 2 mesiacmi", rating: 5, text: "Používam to už niekoľko mesiacov. Žiadne problémy. Vysoká kvalita." },
-                ].map((review, i) => (
+                {allReviews.slice(0, visibleReviews).map((review, i) => (
                   <div key={i} className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}>
                     <div className="mb-2 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-foreground">{review.author}</span>
                         <div className="flex gap-0.5">
-                          {[...Array(5)].map((_, j) => (
-                            <Star key={j} className={`h-3.5 w-3.5 ${j < review.rating ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
-                          ))}
+                          {[...Array(5)].map((_, j) => {
+                            const fill = Math.min(1, Math.max(0, review.rating - j));
+                            return fill >= 1 ? (
+                              <Star key={j} className="h-3.5 w-3.5 fill-primary text-primary" />
+                            ) : fill > 0 ? (
+                              <span key={j} className="relative h-3.5 w-3.5">
+                                <Star className="absolute inset-0 h-3.5 w-3.5 fill-muted text-muted" />
+                                <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+                                  <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+                                </span>
+                              </span>
+                            ) : (
+                              <Star key={j} className="h-3.5 w-3.5 fill-muted text-muted" />
+                            );
+                          })}
                         </div>
                       </div>
                       <span className="text-xs text-muted-foreground">{review.date}</span>
@@ -340,6 +366,13 @@ const ProductDetail = () => {
                     <p className="text-sm text-muted-foreground">{review.text}</p>
                   </div>
                 ))}
+                {visibleReviews < allReviews.length && (
+                  <div className="pt-4 text-center">
+                    <Button variant="outline" onClick={() => setVisibleReviews((v) => Math.min(v + 6, allReviews.length))}>
+                      Zobraziť viac recenzií ({allReviews.length - visibleReviews} zostáva)
+                    </Button>
+                  </div>
+                )}
               </div>
             </TabsContent>
           </Tabs>
