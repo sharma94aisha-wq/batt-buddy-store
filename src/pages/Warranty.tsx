@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Shield } from "lucide-react";
 
 const Warranty = () => (
@@ -7,6 +8,7 @@ const Warranty = () => (
     <Header />
     <main className="py-12">
       <div className="container mx-auto max-w-3xl px-4">
+        <PageBreadcrumb items={[{ label: "Warranty" }]} />
         <div className="flex items-center gap-3">
           <Shield className="h-8 w-8 text-primary" />
           <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Warranty</h1>

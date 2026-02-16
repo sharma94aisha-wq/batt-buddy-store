@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const faqs = [
@@ -18,6 +19,7 @@ const FAQ = () => (
     <Header />
     <main className="py-12">
       <div className="container mx-auto max-w-3xl px-4">
+        <PageBreadcrumb items={[{ label: "FAQ" }]} />
         <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Frequently Asked Questions</h1>
         <p className="mt-2 text-muted-foreground">Find answers to common questions about our products and services.</p>
         <Accordion type="single" collapsible className="mt-8">

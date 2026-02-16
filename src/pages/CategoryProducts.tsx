@@ -2,13 +2,14 @@ import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import ProductCard from "@/components/ProductCard";
 import { products, categoryLabels, brands, type ProductCategory } from "@/data/products";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronRight, SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type SortOption = "default" | "price-asc" | "price-desc" | "rating" | "name";
@@ -139,12 +140,7 @@ const CategoryProducts = () => {
       <Header />
       <main className="py-8">
         <div className="container mx-auto px-4">
-          {/* Breadcrumb */}
-          <nav className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-foreground">{categoryName}</span>
-          </nav>
+          <PageBreadcrumb items={[{ label: categoryName }]} />
 
           {/* Header */}
           <div className="mb-8 flex items-center justify-between">
