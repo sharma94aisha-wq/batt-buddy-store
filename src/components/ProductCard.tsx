@@ -88,9 +88,9 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
         {/* Price & Add to Cart */}
         <div className="mt-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-display text-lg font-bold text-primary">${price.toFixed(2)}</span>
+            <span className="font-display text-lg font-bold text-primary">€{price.toFixed(2)}</span>
             {originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
+              <span className="text-sm text-muted-foreground line-through">€{originalPrice.toFixed(2)}</span>
             )}
           </div>
           <Button variant="electric" size="icon" className="h-9 w-9 shrink-0" onClick={(e) => { e.preventDefault(); handleAddToCart(); }} disabled={stockQuantity === 0}>

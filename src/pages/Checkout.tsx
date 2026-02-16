@@ -202,7 +202,7 @@ const Checkout = () => {
                           <p className="text-muted-foreground text-sm">Qty: {item.quantity}</p>
                         </div>
                         <div className="flex items-start gap-2">
-                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="font-medium">€{(item.price * item.quantity).toFixed(2)}</p>
                           <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => removeFromCart(item.id)}>
                             <X className="h-3 w-3" />
                           </Button>
@@ -214,7 +214,7 @@ const Checkout = () => {
                             <div key={addon.id} className="flex items-center justify-between text-sm text-muted-foreground">
                               <span>↳ {addon.label}</span>
                               <div className="flex items-center gap-2">
-                                <span className="text-foreground">${(addon.price * item.quantity).toFixed(2)}</span>
+                                <span className="text-foreground">€{(addon.price * item.quantity).toFixed(2)}</span>
                                 <Button variant="ghost" size="icon" className="h-5 w-5 text-destructive hover:text-destructive" onClick={() => removeAddon(item.id, addon.id)}>
                                   <X className="h-3 w-3" />
                                 </Button>
@@ -264,12 +264,12 @@ const Checkout = () => {
                 <div className="border-t border-border pt-4 space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>€{totalPrice.toFixed(2)}</span>
                   </div>
                   {promoCode && (
                     <div className="flex justify-between text-sm text-green-500">
                       <span>Discount ({promoCode.label})</span>
-                      <span>-${discountAmount.toFixed(2)}</span>
+                      <span>-€{discountAmount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
@@ -284,11 +284,11 @@ const Checkout = () => {
                   )}
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>€{tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold pt-2 border-t border-border">
                     <span>Total</span>
-                    <span className="text-primary">${orderTotal.toFixed(2)}</span>
+                    <span className="text-primary">€{orderTotal.toFixed(2)}</span>
                   </div>
                 </div>
 

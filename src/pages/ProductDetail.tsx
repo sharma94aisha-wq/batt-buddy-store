@@ -147,10 +147,10 @@ const ProductDetail = () => {
               </div>
               {/* Price */}
               <div className="flex items-baseline gap-3">
-                <span className="font-display text-3xl font-bold text-primary">${product.price.toFixed(2)}</span>
+                <span className="font-display text-3xl font-bold text-primary">€{product.price.toFixed(2)}</span>
                 {product.originalPrice && (
                   <>
-                    <span className="text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
+                    <span className="text-lg text-muted-foreground line-through">€{product.originalPrice.toFixed(2)}</span>
                     <span className="rounded bg-destructive/10 px-2 py-0.5 text-sm font-semibold text-destructive">-{discount}%</span>
                   </>
                 )}
@@ -221,7 +221,7 @@ const ProductDetail = () => {
                             </TooltipContent>
                           </Tooltip>
                         </div>
-                        <span className="text-sm font-medium text-primary">+${service.price.toFixed(2)}</span>
+                        <span className="text-sm font-medium text-primary">+€{service.price.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
