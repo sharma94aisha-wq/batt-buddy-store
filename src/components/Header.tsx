@@ -1,12 +1,15 @@
-import { ShoppingCart, Zap, Menu } from "lucide-react";
+import { ShoppingCart, Zap, Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import CartDrawer from "@/components/CartDrawer";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { totalItems, setIsCartOpen } = useCart();
+  const { user } = useAuth();
 
   return (
     <>
@@ -41,7 +44,12 @@ const Header = () => {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Link to={user ? "/account" : "/auth"}>
+                <Button variant="ghost" size="icon" className="relative">
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
               <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
@@ -80,6 +88,9 @@ const Header = () => {
                 <a href="#contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Contact
                 </a>
+                <Link to={user ? "/account" : "/auth"} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                  {user ? "My Account" : "Sign In"}
+                </Link>
                 <Button variant="electric" size="sm">
                   Shop Now
                 </Button>

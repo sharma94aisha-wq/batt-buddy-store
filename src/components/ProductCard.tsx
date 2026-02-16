@@ -1,10 +1,15 @@
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart, Star, Bookmark } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
-  id: number;
+  id: number | string;
   image: string;
   name: string;
   price: number;
@@ -17,9 +22,44 @@ interface ProductCardProps {
 
 const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, badge, stockQuantity }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("bookmarks")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("product_id", String(id))
+        .maybeSingle()
+        .then(({ data }) => {
+          setIsBookmarked(!!data);
+        });
+    }
+  }, [user, id]);
 
   const handleAddToCart = () => {
-    addToCart({ id, image, name, price });
+    addToCart({ id: typeof id === "string" ? parseInt(id.substring(0, 8), 16) : id, image, name, price });
+  };
+
+  const toggleBookmark = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    if (isBookmarked) {
+      await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("product_id", String(id));
+      setIsBookmarked(false);
+      toast.info("Bookmark removed");
+    } else {
+      await supabase.from("bookmarks").insert({ user_id: user.id, product_id: String(id) });
+      setIsBookmarked(true);
+      toast.success("Bookmarked!");
+    }
   };
 
   return (
@@ -31,9 +71,17 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
         </div>
       )}
 
+      {/* Bookmark button */}
+      <button
+        onClick={toggleBookmark}
+        className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-colors hover:bg-background"
+      >
+        <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-primary text-primary" : "text-muted-foreground"}`} />
+      </button>
+
       {/* Discount badge */}
       {originalPrice && (
-        <div className="absolute right-3 top-3 z-10 rounded-lg bg-destructive/10 px-2.5 py-1">
+        <div className="absolute left-3 top-12 z-10 rounded-lg bg-destructive/10 px-2.5 py-1">
           <span className="text-sm font-semibold text-destructive">
             -{Math.round(((originalPrice - price) / originalPrice) * 100)}%
           </span>
