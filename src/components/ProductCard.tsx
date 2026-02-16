@@ -29,6 +29,15 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
           <span className="text-xs font-bold uppercase text-primary-foreground">{badge}</span>
         </div>
       )}
+
+      {/* Discount badge */}
+      {originalPrice && (
+        <div className="absolute right-3 top-3 z-10 rounded-full bg-destructive px-2.5 py-1">
+          <span className="text-xs font-bold text-destructive-foreground">
+            -{Math.round(((originalPrice - price) / originalPrice) * 100)}%
+          </span>
+        </div>
+      )}
       
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-secondary/30">
