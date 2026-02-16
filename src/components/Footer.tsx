@@ -49,7 +49,6 @@ const Footer = () => {
           <div>
             <h3 className="mb-4 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Kontakt</h3>
             <ul className="space-y-2">
-              <li className="text-sm text-muted-foreground">+421 900 123 456</li>
               <li className="text-sm text-muted-foreground">podpora@voltcharge.sk</li>
               <li className="text-sm text-muted-foreground">Po–Pi: 8:00 – 20:00</li>
               <li className="text-sm text-muted-foreground">So–Ne: 9:00 – 17:00</li>
