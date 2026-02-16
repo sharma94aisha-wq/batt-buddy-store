@@ -203,6 +203,7 @@ const CategoryProducts = () => {
                       rating={product.rating}
                       reviews={product.reviews}
                       badge={product.badge}
+                      stockQuantity={product.stockQuantity}
                     />
                   ))}
                 </div>
