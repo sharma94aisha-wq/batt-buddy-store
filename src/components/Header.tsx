@@ -38,9 +38,9 @@ const Header = () => {
               <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 Prečo my
               </a>
-              <a href="#contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              <Link to="/contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 Kontakt
-              </a>
+              </Link>
             </nav>
 
             {/* Actions */}
@@ -85,9 +85,9 @@ const Header = () => {
                 <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Prečo my
                 </a>
-                <a href="#contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                <Link to="/contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Kontakt
-                </a>
+                </Link>
                 <Link to={user ? "/account" : "/auth"} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   {user ? "Môj účet" : "Prihlásiť sa"}
                 </Link>
