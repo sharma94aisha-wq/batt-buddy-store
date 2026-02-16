@@ -30,6 +30,7 @@ interface DeliveryMethodSelectorProps {
   onChange: (method: DeliveryMethod) => void;
   selectedPoint: PacketaPoint | null;
   onPointSelected: (point: PacketaPoint | null) => void;
+  currentTotal?: number;
 }
 
 const PACKETA_API_KEY = "REPLACE_WITH_YOUR_PACKETA_API_KEY";
@@ -39,7 +40,9 @@ const DeliveryMethodSelector = ({
   onChange,
   selectedPoint,
   onPointSelected,
+  currentTotal = 0,
 }: DeliveryMethodSelectorProps) => {
+  const freeShipping = currentTotal >= 40;
   const [widgetLoaded, setWidgetLoaded] = useState(false);
 
   useEffect(() => {
@@ -90,7 +93,7 @@ const DeliveryMethodSelector = ({
               Pick up at a Packeta point near you
             </p>
           </div>
-          <span className="text-sm font-semibold">€2.00</span>
+          <span className={`text-sm font-semibold ${freeShipping ? "text-green-600" : ""}`}>{freeShipping ? "Free" : "€2.00"}</span>
         </label>
 
         {value === "pickup" && (
@@ -142,7 +145,7 @@ const DeliveryMethodSelector = ({
               Delivered to your address in Slovakia
             </p>
           </div>
-          <span className="text-sm font-semibold">€6.00</span>
+          <span className={`text-sm font-semibold ${freeShipping ? "text-green-600" : ""}`}>{freeShipping ? "Free" : "€6.00"}</span>
         </label>
       </RadioGroup>
     </div>
