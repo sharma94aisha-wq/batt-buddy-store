@@ -113,16 +113,20 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
         
         <div className="mb-3 flex items-center gap-2">
           <div className="flex items-center gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-3.5 w-3.5 ${
-                  i < Math.floor(rating)
-                    ? "fill-primary text-primary"
-                    : "fill-muted text-muted"
-                }`}
-              />
-            ))}
+            {[...Array(5)].map((_, i) => {
+              const full = i < Math.floor(rating);
+              const half = !full && i < rating;
+              return half ? (
+                <span key={i} className="relative h-3.5 w-3.5">
+                  <Star className="absolute inset-0 h-3.5 w-3.5 fill-muted text-muted" />
+                  <span className="absolute inset-0 overflow-hidden" style={{ width: "50%" }}>
+                    <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+                  </span>
+                </span>
+              ) : (
+                <Star key={i} className={`h-3.5 w-3.5 ${full ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
+              );
+            })}
           </div>
           <span className="text-xs text-muted-foreground">({reviews})</span>
         </div>
