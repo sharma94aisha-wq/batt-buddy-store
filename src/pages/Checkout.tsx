@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 import { ArrowLeft, CreditCard, Lock, Truck, Tag, X, Trash2, Banknote, Building2 } from "lucide-react";
 import FreeShippingProgress from "@/components/FreeShippingProgress";
+import DeliveryMethodSelector, { DeliveryMethod, PacketaPoint } from "@/components/DeliveryMethodSelector";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 
@@ -18,6 +19,8 @@ const Checkout = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [promoInput, setPromoInput] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cod" | "bank">("card");
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("pickup");
+  const [selectedPoint, setSelectedPoint] = useState<PacketaPoint | null>(null);
 
   const [formData, setFormData] = useState({
     email: "", firstName: "", lastName: "", address: "",
@@ -32,6 +35,10 @@ const Checkout = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (deliveryMethod === "pickup" && !selectedPoint) {
+      toast.error("Please select a pickup point");
+      return;
+    }
     setIsProcessing(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
     clearCart();
@@ -59,7 +66,8 @@ const Checkout = () => {
   }
 
   const codFee = paymentMethod === "cod" ? 1 : 0;
-  const shipping = finalPrice >= 40 ? 0 : 5.99;
+  const shippingBase = deliveryMethod === "pickup" ? 2 : 6;
+  const shipping = finalPrice >= 40 ? 0 : shippingBase;
   const tax = finalPrice * 0.08;
   const orderTotal = finalPrice + shipping + tax + codFee;
 
@@ -125,6 +133,20 @@ const Checkout = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Delivery Method */}
+              <div className="bg-card rounded-xl p-6 border border-border">
+                <div className="flex items-center gap-2 mb-4">
+                  <Truck className="h-5 w-5 text-primary" />
+                  <h2 className="font-display text-xl">Delivery Method</h2>
+                </div>
+                <DeliveryMethodSelector
+                  value={deliveryMethod}
+                  onChange={setDeliveryMethod}
+                  selectedPoint={selectedPoint}
+                  onPointSelected={setSelectedPoint}
+                />
               </div>
 
               <div className="bg-card rounded-xl p-6 border border-border">
@@ -273,8 +295,10 @@ const Checkout = () => {
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Shipping</span>
-                    <span className={shipping === 0 ? "text-green-500" : ""}>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
+                    <span className="text-muted-foreground">
+                      Shipping ({deliveryMethod === "pickup" ? "Pickup point" : "Home delivery"})
+                    </span>
+                    <span className={shipping === 0 ? "text-green-600" : ""}>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
                   </div>
                   {codFee > 0 && (
                     <div className="flex justify-between text-sm">
