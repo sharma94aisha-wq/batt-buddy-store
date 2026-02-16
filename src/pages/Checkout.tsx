@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
-import { ArrowLeft, CreditCard, Lock, Truck, Tag, X, Trash2 } from "lucide-react";
+import { ArrowLeft, CreditCard, Lock, Truck, Tag, X, Trash2, Banknote, Building2 } from "lucide-react";
 import FreeShippingProgress from "@/components/FreeShippingProgress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 
 const Checkout = () => {
@@ -16,6 +17,7 @@ const Checkout = () => {
   } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [promoInput, setPromoInput] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "cod" | "bank">("card");
 
   const [formData, setFormData] = useState({
     email: "", firstName: "", lastName: "", address: "",
@@ -56,9 +58,10 @@ const Checkout = () => {
     );
   }
 
+  const codFee = paymentMethod === "cod" ? 1 : 0;
   const shipping = finalPrice >= 40 ? 0 : 5.99;
   const tax = finalPrice * 0.08;
-  const orderTotal = finalPrice + shipping + tax;
+  const orderTotal = finalPrice + shipping + tax + codFee;
 
   return (
     <div className="min-h-screen bg-background">
@@ -124,28 +127,63 @@ const Checkout = () => {
                 </div>
               </div>
 
-              {/* Payment Information */}
               <div className="bg-card rounded-xl p-6 border border-border">
                 <div className="flex items-center gap-2 mb-4">
                   <CreditCard className="h-5 w-5 text-primary" />
-                  <h2 className="font-display text-xl">Payment</h2>
+                  <h2 className="font-display text-xl">Payment Method</h2>
                 </div>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="cardNumber">Card Number</Label>
-                    <Input id="cardNumber" name="cardNumber" required value={formData.cardNumber} onChange={handleInputChange} placeholder="1234 5678 9012 3456" className="mt-1" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="expiryDate">Expiry Date</Label>
-                      <Input id="expiryDate" name="expiryDate" required value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="mt-1" />
+                <RadioGroup value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as "card" | "cod" | "bank")} className="space-y-3">
+                  <label htmlFor="pm-card" className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${paymentMethod === "card" ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <RadioGroupItem value="card" id="pm-card" />
+                    <CreditCard className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Credit / Debit Card</p>
+                      <p className="text-xs text-muted-foreground">Pay securely with your card</p>
                     </div>
+                  </label>
+                  <label htmlFor="pm-cod" className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${paymentMethod === "cod" ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <RadioGroupItem value="cod" id="pm-cod" />
+                    <Banknote className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Cash on Delivery</p>
+                      <p className="text-xs text-muted-foreground">Pay when you receive your order (+€1.00 fee)</p>
+                    </div>
+                  </label>
+                  <label htmlFor="pm-bank" className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${paymentMethod === "bank" ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <RadioGroupItem value="bank" id="pm-bank" />
+                    <Building2 className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Bank Transfer</p>
+                      <p className="text-xs text-muted-foreground">Pay via bank details after placing order</p>
+                    </div>
+                  </label>
+                </RadioGroup>
+
+                {paymentMethod === "card" && (
+                  <div className="space-y-4 mt-4 pt-4 border-t border-border">
                     <div>
-                      <Label htmlFor="cvv">CVV</Label>
-                      <Input id="cvv" name="cvv" required value={formData.cvv} onChange={handleInputChange} placeholder="123" className="mt-1" />
+                      <Label htmlFor="cardNumber">Card Number</Label>
+                      <Input id="cardNumber" name="cardNumber" required value={formData.cardNumber} onChange={handleInputChange} placeholder="1234 5678 9012 3456" className="mt-1" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="expiryDate">Expiry Date</Label>
+                        <Input id="expiryDate" name="expiryDate" required value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="mt-1" />
+                      </div>
+                      <div>
+                        <Label htmlFor="cvv">CVV</Label>
+                        <Input id="cvv" name="cvv" required value={formData.cvv} onChange={handleInputChange} placeholder="123" className="mt-1" />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {paymentMethod === "bank" && (
+                  <div className="mt-4 pt-4 border-t border-border rounded-lg bg-muted/50 p-4 space-y-1 text-sm">
+                    <p className="font-medium">Bank details will be sent to your email after placing the order.</p>
+                    <p className="text-muted-foreground">Please complete the transfer within 3 business days.</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -238,6 +276,12 @@ const Checkout = () => {
                     <span className="text-muted-foreground">Shipping</span>
                     <span className={shipping === 0 ? "text-green-500" : ""}>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
                   </div>
+                  {codFee > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Cash on Delivery fee</span>
+                      <span>€{codFee.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tax</span>
                     <span>${tax.toFixed(2)}</span>
