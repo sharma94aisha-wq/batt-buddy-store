@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+
 
 interface ProductCardProps {
   id: string;
@@ -24,7 +24,9 @@ interface ProductCardProps {
 const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, reviews, badge, stockQuantity }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const handleAddToCart = () => {
+    addToCart({ id, image, name, price });
+  };
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
@@ -38,28 +40,36 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
         .then(({ data }) => {
           setIsBookmarked(!!data);
         });
+    } else {
+      const local: string[] = JSON.parse(localStorage.getItem("guest_bookmarks") || "[]");
+      setIsBookmarked(local.includes(id));
     }
   }, [user, id]);
-
-  const handleAddToCart = () => {
-    addToCart({ id, image, name, price });
-  };
 
   const toggleBookmark = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-    if (isBookmarked) {
-      await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("product_id", id);
-      setIsBookmarked(false);
-      toast.info("Bookmark removed");
+    if (user) {
+      if (isBookmarked) {
+        await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("product_id", id);
+        setIsBookmarked(false);
+        toast.info("Bookmark removed");
+      } else {
+        await supabase.from("bookmarks").insert({ user_id: user.id, product_id: id });
+        setIsBookmarked(true);
+        toast.success("Bookmarked!");
+      }
     } else {
-      await supabase.from("bookmarks").insert({ user_id: user.id, product_id: id });
-      setIsBookmarked(true);
-      toast.success("Bookmarked!");
+      const local: string[] = JSON.parse(localStorage.getItem("guest_bookmarks") || "[]");
+      if (isBookmarked) {
+        localStorage.setItem("guest_bookmarks", JSON.stringify(local.filter((b) => b !== id)));
+        setIsBookmarked(false);
+        toast.info("Bookmark removed");
+      } else {
+        localStorage.setItem("guest_bookmarks", JSON.stringify([...local, id]));
+        setIsBookmarked(true);
+        toast.success("Bookmarked!");
+      }
     }
   };
 
