@@ -1,4 +1,4 @@
-import { Shield, Truck, Zap, Award, RefreshCw, CreditCard } from "lucide-react";
+import { Shield, Truck, Zap, Award, Users, CreditCard } from "lucide-react";
 
 const features = [
   {
@@ -22,9 +22,9 @@ const features = [
     description: "Každý produkt je testovaný a certifikovaný pre vysoký výkon.",
   },
   {
-    icon: RefreshCw,
-    title: "Jednoduché vrátenie",
-    description: "30-dňová politika vrátenia tovaru bez problémov.",
+    icon: Users,
+    title: "Overené zákazníkmi",
+    description: "Tisíce spokojných zákazníkov a pozitívnych recenzií.",
   },
   {
     icon: CreditCard,
