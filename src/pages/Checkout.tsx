@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 import { ArrowLeft, CreditCard, Lock, Truck, Tag, X } from "lucide-react";
+import FreeShippingProgress from "@/components/FreeShippingProgress";
 import { toast } from "sonner";
 
 const Checkout = () => {
@@ -55,7 +56,7 @@ const Checkout = () => {
     );
   }
 
-  const shipping = 0;
+  const shipping = finalPrice >= 40 ? 0 : 5.99;
   const tax = finalPrice * 0.08;
   const orderTotal = finalPrice + shipping + tax;
 
@@ -166,6 +167,11 @@ const Checkout = () => {
                   ))}
                 </div>
 
+                {/* Free Shipping Progress */}
+                <div className="border-t border-border pt-4 mb-4">
+                  <FreeShippingProgress currentTotal={finalPrice} />
+                </div>
+
                 {/* Promo Code */}
                 <div className="border-t border-border pt-4 mb-4">
                   {promoCode ? (
@@ -208,7 +214,7 @@ const Checkout = () => {
                   )}
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Shipping</span>
-                    <span className="text-green-500">Free</span>
+                    <span className={shipping === 0 ? "text-green-500" : ""}>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tax</span>
