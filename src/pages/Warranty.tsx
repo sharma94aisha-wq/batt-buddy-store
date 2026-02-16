@@ -16,8 +16,8 @@ const Warranty = () => (
         <p className="mt-2 text-muted-foreground">Všetky produkty VoltCharge sú vyrobené tak, aby vydržali, a sú kryté našou zárukou.</p>
         <div className="mt-8 space-y-6 text-sm text-muted-foreground">
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
-            <h2 className="font-display text-lg font-semibold text-foreground">2-ročná obmedzená záruka</h2>
-            <p>Každý produkt zakúpený od VoltCharge je krytý 2-ročnou obmedzenou zárukou od dátumu nákupu. Táto záruka pokrýva chyby materiálu a spracovania pri bežnom používaní.</p>
+            <h2 className="font-display text-lg font-semibold text-foreground">365-dňová obmedzená záruka</h2>
+            <p>Každý produkt zakúpený od VoltCharge je krytý 365-dňovou obmedzenou zárukou od dátumu nákupu. Táto záruka pokrýva chyby materiálu a spracovania pri bežnom používaní.</p>
           </section>
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
             <h2 className="font-display text-lg font-semibold text-foreground">Čo je kryté</h2>
