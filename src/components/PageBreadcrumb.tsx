@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem as BreadcrumbListItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { cn } from "@/lib/utils";
 
 export interface BreadcrumbEntry {
   label: string;
@@ -15,32 +8,31 @@ export interface BreadcrumbEntry {
 
 interface PageBreadcrumbProps {
   items: BreadcrumbEntry[];
+  className?: string;
 }
 
-const PageBreadcrumb = ({ items }: PageBreadcrumbProps) => (
-  <Breadcrumb className="mb-6">
-    <BreadcrumbList>
-      <BreadcrumbListItem>
-        <BreadcrumbLink asChild>
-          <Link to="/">Home</Link>
-        </BreadcrumbLink>
-      </BreadcrumbListItem>
+const PageBreadcrumb = ({ items, className }: PageBreadcrumbProps) => (
+  <nav aria-label="breadcrumb" className={cn("mb-6", className)}>
+    <ol className="flex flex-wrap items-center gap-2 text-sm">
+      <li>
+        <Link to="/" className="text-muted-foreground transition-colors hover:text-foreground">
+          Home
+        </Link>
+      </li>
       {items.map((item, i) => (
-        <span key={i} className="contents">
-          <BreadcrumbSeparator />
-          <BreadcrumbListItem>
-            {item.href ? (
-              <BreadcrumbLink asChild>
-                <Link to={item.href}>{item.label}</Link>
-              </BreadcrumbLink>
-            ) : (
-              <BreadcrumbPage>{item.label}</BreadcrumbPage>
-            )}
-          </BreadcrumbListItem>
-        </span>
+        <li key={i} className="flex items-center gap-2">
+          <span className="text-muted-foreground">/</span>
+          {item.href ? (
+            <Link to={item.href} className="text-muted-foreground transition-colors hover:text-foreground">
+              {item.label}
+            </Link>
+          ) : (
+            <span className="font-medium text-foreground">{item.label}</span>
+          )}
+        </li>
       ))}
-    </BreadcrumbList>
-  </Breadcrumb>
+    </ol>
+  </nav>
 );
 
 export default PageBreadcrumb;

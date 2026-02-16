@@ -6,7 +6,7 @@ import { Shield } from "lucide-react";
 const Warranty = () => (
   <div className="min-h-screen bg-background">
     <Header />
-    <main className="py-12">
+    <main className="pt-24 pb-12">
       <div className="container mx-auto max-w-3xl px-4">
         <PageBreadcrumb items={[{ label: "Warranty" }]} />
         <div className="flex items-center gap-3">
