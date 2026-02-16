@@ -188,41 +188,41 @@ const ProductDetail = () => {
                   <RotateCcw className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">30-Day Returns</span>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Additional Services */}
-          <div className="mt-8 rounded-xl border border-border bg-card p-6">
-            <h3 className="mb-4 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Additional Services</h3>
-            <TooltipProvider delayDuration={200}>
-              <div className="space-y-3">
-                {additionalServices.map((service) => (
-                  <div key={service.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id={service.id}
-                        checked={selectedServices.includes(service.id)}
-                        onCheckedChange={() => toggleService(service.id)}
-                      />
-                      <label htmlFor={service.id} className="cursor-pointer text-sm text-foreground">
-                        {service.label}
-                      </label>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button type="button" className="flex h-4 w-4 items-center justify-center rounded-full border border-muted-foreground/40 text-muted-foreground transition-colors hover:border-primary hover:text-primary">
-                            <span className="text-[10px] font-bold leading-none">!</span>
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="max-w-[220px] text-xs">
-                          {service.tooltip}
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                    <span className="text-sm font-medium text-primary">+${service.price.toFixed(2)}</span>
+              {/* Additional Services */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Additional Services</h3>
+                <TooltipProvider delayDuration={200}>
+                  <div className="space-y-3">
+                    {additionalServices.map((service) => (
+                      <div key={service.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id={service.id}
+                            checked={selectedServices.includes(service.id)}
+                            onCheckedChange={() => toggleService(service.id)}
+                          />
+                          <label htmlFor={service.id} className="cursor-pointer text-sm text-foreground">
+                            {service.label}
+                          </label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button type="button" className="flex h-4 w-4 items-center justify-center rounded-full border border-muted-foreground/40 text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                                <span className="text-[10px] font-bold leading-none">!</span>
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-[220px] text-xs">
+                              {service.tooltip}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <span className="text-sm font-medium text-primary">+${service.price.toFixed(2)}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </TooltipProvider>
               </div>
-            </TooltipProvider>
+            </div>
           </div>
 
           {/* Tabs */}
