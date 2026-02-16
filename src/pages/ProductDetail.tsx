@@ -104,7 +104,7 @@ const ProductDetail = () => {
             {/* Info */}
             <div className="space-y-6">
               {product.badge && (
-                <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
+                <span className="inline-block rounded-lg bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
                   {product.badge}
                 </span>
               )}
