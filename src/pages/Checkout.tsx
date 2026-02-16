@@ -122,6 +122,7 @@ const Checkout = () => {
                   onChange={setDeliveryMethod}
                   selectedPoint={selectedPoint}
                   onPointSelected={setSelectedPoint}
+                  currentTotal={finalPrice}
                 />
 
                 {/* Home delivery address fields */}
