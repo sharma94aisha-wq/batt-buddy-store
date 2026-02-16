@@ -8,7 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play } from "lucide-react";
+import { Star, ShoppingCart, Truck, Shield, Users, Minus, Plus, Play } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -249,10 +249,10 @@ const ProductDetail = () => {
                   <Truck className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">Doprava zadarmo</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <Shield className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">2-ročná záruka</span>
+                  <Shield className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">365-dňová záruka</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <RotateCcw className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">30-dňové vrátenie</span>
+                  <Users className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">Overené zákazníkmi</span>
                 </div>
               </div>
 
