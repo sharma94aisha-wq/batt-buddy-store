@@ -32,11 +32,11 @@ const ResetPassword = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Heslá sa nezhodujú");
       return;
     }
     if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+      toast.error("Heslo musí mať aspoň 6 znakov");
       return;
     }
     setLoading(true);
@@ -44,7 +44,7 @@ const ResetPassword = () => {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Password updated successfully!");
+      toast.success("Heslo bolo úspešne aktualizované!");
       navigate("/admin/login");
     }
     setLoading(false);
@@ -54,9 +54,9 @@ const ResetPassword = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="text-center space-y-4">
-          <h1 className="font-display text-2xl">Invalid or expired reset link</h1>
+          <h1 className="font-display text-2xl">Neplatný alebo vypršaný odkaz na obnovenie</h1>
           <Button variant="electric" onClick={() => navigate("/admin/login")}>
-            Go to Login
+            Prejsť na prihlásenie
           </Button>
         </div>
       </div>
@@ -71,13 +71,13 @@ const ResetPassword = () => {
             <Zap className="h-8 w-8 text-primary-foreground" />
           </div>
           <h1 className="mt-4 font-display text-2xl font-bold text-foreground">
-            Set New Password
+            Nastaviť nové heslo
           </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="password">New Password</Label>
+            <Label htmlFor="password">Nové heslo</Label>
             <Input
               id="password"
               type="password"
@@ -89,7 +89,7 @@ const ResetPassword = () => {
             />
           </div>
           <div>
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <Label htmlFor="confirmPassword">Potvrdiť heslo</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -101,7 +101,7 @@ const ResetPassword = () => {
             />
           </div>
           <Button type="submit" variant="electric" className="w-full" disabled={loading}>
-            {loading ? "Updating..." : "Update Password"}
+            {loading ? "Aktualizujem..." : "Aktualizovať heslo"}
           </Button>
         </form>
       </div>

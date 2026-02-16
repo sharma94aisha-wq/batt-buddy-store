@@ -28,7 +28,7 @@ const CustomerAuth = () => {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Password reset email sent! Check your inbox.");
+        toast.success("E-mail na obnovenie hesla bol odoslaný! Skontrolujte si schránku.");
         setIsForgotPassword(false);
       }
       setLoading(false);
@@ -40,7 +40,7 @@ const CustomerAuth = () => {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Account created! Check your email to verify.");
+        toast.success("Účet vytvorený! Skontrolujte si e-mail pre overenie.");
       }
     } else {
       const { error } = await signIn(email, password);
@@ -63,32 +63,32 @@ const CustomerAuth = () => {
             </div>
           </a>
           <h1 className="mt-4 font-display text-2xl font-bold text-foreground">
-            {isForgotPassword ? "Reset Password" : isSignUp ? "Create Account" : "Welcome Back"}
+            {isForgotPassword ? "Obnoviť heslo" : isSignUp ? "Vytvoriť účet" : "Vitajte späť"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {isForgotPassword
-              ? "Enter your email to receive a reset link"
+              ? "Zadajte e-mail pre prijatie odkazu na obnovenie"
               : isSignUp
-              ? "Sign up to track orders & save bookmarks"
-              : "Sign in to your account"}
+              ? "Zaregistrujte sa pre sledovanie objednávok a ukladanie záložiek"
+              : "Prihláste sa do svojho účtu"}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">E-mail</Label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="your@email.com"
+              placeholder="vas@email.com"
             />
           </div>
           {!isForgotPassword && (
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Heslo</Label>
               <Input
                 id="password"
                 type="password"
@@ -102,12 +102,12 @@ const CustomerAuth = () => {
           )}
           <Button type="submit" variant="electric" className="w-full" disabled={loading}>
             {loading
-              ? "Loading..."
+              ? "Načítavam..."
               : isForgotPassword
-              ? "Send Reset Email"
+              ? "Odoslať odkaz na obnovenie"
               : isSignUp
-              ? "Create Account"
-              : "Sign In"}
+              ? "Vytvoriť účet"
+              : "Prihlásiť sa"}
           </Button>
           {!isSignUp && !isForgotPassword && (
             <button
@@ -115,7 +115,7 @@ const CustomerAuth = () => {
               onClick={() => setIsForgotPassword(true)}
               className="w-full text-sm text-muted-foreground hover:text-primary"
             >
-              Forgot password?
+              Zabudli ste heslo?
             </button>
           )}
         </form>
@@ -123,13 +123,13 @@ const CustomerAuth = () => {
         <p className="text-center text-sm text-muted-foreground">
           {isForgotPassword ? (
             <button onClick={() => setIsForgotPassword(false)} className="text-primary hover:underline">
-              Back to sign in
+              Späť na prihlásenie
             </button>
           ) : (
             <>
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+              {isSignUp ? "Už máte účet?" : "Nemáte účet?"}{" "}
               <button onClick={() => setIsSignUp(!isSignUp)} className="text-primary hover:underline">
-                {isSignUp ? "Sign in" : "Sign up"}
+                {isSignUp ? "Prihlásiť sa" : "Registrovať sa"}
               </button>
             </>
           )}
@@ -137,7 +137,7 @@ const CustomerAuth = () => {
 
         <div className="text-center">
           <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
-            ← Back to Store
+            ← Späť do obchodu
           </Link>
         </div>
       </div>

@@ -7,17 +7,17 @@ const TermsOfService = () => (
     <Header />
     <main className="pt-24 pb-12">
       <div className="container mx-auto max-w-3xl px-4">
-        <PageBreadcrumb items={[{ label: "Terms of Service" }]} />
-        <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Terms of Service</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Last updated: February 15, 2026</p>
+        <PageBreadcrumb items={[{ label: "Obchodné podmienky" }]} />
+        <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Obchodné podmienky</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Posledná aktualizácia: 15. februára 2026</p>
         <div className="mt-8 space-y-6 text-sm leading-relaxed text-muted-foreground">
           {[
-            { t: "Acceptance of Terms", p: "By accessing and using the VoltCharge website, you agree to be bound by these Terms of Service. If you do not agree, please do not use our services." },
-            { t: "Products & Pricing", p: "All prices are listed in USD and are subject to change without notice. We reserve the right to limit quantities and to discontinue any product at any time. Errors in pricing will be corrected and orders may be cancelled if necessary." },
-            { t: "Orders & Payment", p: "By placing an order, you represent that all information provided is accurate. We accept major credit cards and other payment methods displayed at checkout. Orders are subject to acceptance and availability." },
-            { t: "Intellectual Property", p: "All content on this website including text, graphics, logos, and images is the property of VoltCharge and is protected by copyright and trademark laws." },
-            { t: "Limitation of Liability", p: "VoltCharge shall not be liable for any indirect, incidental, or consequential damages arising from the use of our products or services. Our total liability is limited to the purchase price of the product." },
-            { t: "Governing Law", p: "These terms are governed by the laws of the State of New York. Any disputes shall be resolved in the courts of New York County." },
+            { t: "Prijatie podmienok", p: "Prístupom a používaním webovej stránky VoltCharge súhlasíte s týmito Obchodnými podmienkami. Ak nesúhlasíte, prosím nepoužívajte naše služby." },
+            { t: "Produkty a ceny", p: "Všetky ceny sú uvedené v EUR a môžu sa zmeniť bez predchádzajúceho upozornenia. Vyhradzujeme si právo obmedziť množstvá a kedykoľvek stiahnuť akýkoľvek produkt. Chyby v cenách budú opravené a objednávky môžu byť v prípade potreby zrušené." },
+            { t: "Objednávky a platby", p: "Zadaním objednávky potvrdzujete, že všetky poskytnuté informácie sú správne. Akceptujeme hlavné kreditné karty a ďalšie platobné metódy zobrazené pri pokladni. Objednávky podliehajú akceptácii a dostupnosti." },
+            { t: "Duševné vlastníctvo", p: "Všetok obsah na tejto webovej stránke vrátane textov, grafiky, log a obrázkov je majetkom VoltCharge a je chránený autorským právom a zákonmi o ochranných známkach." },
+            { t: "Obmedzenie zodpovednosti", p: "VoltCharge nenesie zodpovednosť za žiadne nepriame, náhodné alebo následné škody vyplývajúce z používania našich produktov alebo služieb. Naša celková zodpovednosť je obmedzená na kúpnu cenu produktu." },
+            { t: "Rozhodné právo", p: "Tieto podmienky sa riadia právnymi predpismi Slovenskej republiky. Akékoľvek spory budú riešené príslušnými súdmi Slovenskej republiky." },
           ].map(({ t, p }) => (
             <section key={t} className="rounded-xl border border-border bg-card p-6 space-y-2">
               <h2 className="font-display text-lg font-semibold text-foreground">{t}</h2>

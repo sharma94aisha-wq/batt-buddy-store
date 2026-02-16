@@ -45,7 +45,7 @@ const SuggestedProducts = ({ categoryId, currentId }: { categoryId: string | nul
 
   return (
     <section className="mt-16">
-      <h2 className="mb-6 font-display text-2xl font-bold text-foreground">You May Also Like</h2>
+      <h2 className="mb-6 font-display text-2xl font-bold text-foreground">Mohlo by sa vám páčiť</h2>
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {suggested.map((p) => (
           <ProductCard
@@ -79,7 +79,6 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
-      // Try by slug first, then by id
       let { data } = await supabase
         .from("products")
         .select("*")
@@ -102,7 +101,7 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="container mx-auto flex items-center justify-center px-4 py-20">
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">Načítavam...</p>
         </main>
         <Footer />
       </div>
@@ -114,8 +113,8 @@ const ProductDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <main className="container mx-auto flex flex-col items-center justify-center px-4 py-20">
-          <h1 className="font-display text-2xl font-bold text-foreground">Product not found</h1>
-          <Link to="/" className="mt-4 text-primary hover:underline">Back to Home</Link>
+          <h1 className="font-display text-2xl font-bold text-foreground">Produkt nebol nájdený</h1>
+          <Link to="/" className="mt-4 text-primary hover:underline">Späť na úvod</Link>
         </main>
         <Footer />
       </div>
@@ -131,9 +130,9 @@ const ProductDetail = () => {
   const warranty2Price = Math.round(product.price * 0.4 * 100) / 100;
 
   const additionalServices = [
-    { id: "warranty-1", label: "Extended Warranty +1 Year", price: warranty1Price, tooltip: "Extend your manufacturer warranty by an additional year for complete peace of mind." },
-    { id: "warranty-2", label: "Extended Warranty +2 Years", price: warranty2Price, tooltip: "Extend your manufacturer warranty by two additional years for maximum protection." },
-    { id: "auto-surprise", label: "Auto Surprise", price: 1, tooltip: "Treat yourself to a small surprise that will be a pleasant bonus to your order." },
+    { id: "warranty-1", label: "Predĺžená záruka +1 rok", price: warranty1Price, tooltip: "Predĺžte záručnú dobu výrobcu o ďalší rok pre úplný pokoj." },
+    { id: "warranty-2", label: "Predĺžená záruka +2 roky", price: warranty2Price, tooltip: "Predĺžte záručnú dobu výrobcu o dva ďalšie roky pre maximálnu ochranu." },
+    { id: "auto-surprise", label: "Auto prekvapenie", price: 1, tooltip: "Doprajte si malé prekvapenie, ktoré bude príjemným bonusom k vašej objednávke." },
   ];
 
   const toggleService = (id: string) => {
@@ -161,14 +160,12 @@ const ProductDetail = () => {
           <PageBreadcrumb items={[{ label: product.name }]} />
 
           <div className="grid gap-8 lg:grid-cols-2">
-            {/* Images */}
             <div className="space-y-4">
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <img src={allImages[selectedImage]} alt={product.name} className="aspect-square w-full object-cover" />
               </div>
             </div>
 
-            {/* Info */}
             <div className="space-y-6">
               {product.badge && (
                 <span className="inline-block rounded-lg bg-primary px-3 py-1 text-xs font-bold uppercase text-primary-foreground">
@@ -178,16 +175,14 @@ const ProductDetail = () => {
               <div>
                 <h1 className="mt-1 font-display text-2xl font-bold text-foreground md:text-3xl">{product.name}</h1>
               </div>
-              {/* Rating */}
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating ?? 0) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
                   ))}
                 </div>
-                <span className="text-sm text-muted-foreground">{product.rating ?? 0} ({product.reviews_count ?? 0} reviews)</span>
+                <span className="text-sm text-muted-foreground">{product.rating ?? 0} ({product.reviews_count ?? 0} recenzií)</span>
               </div>
-              {/* Price */}
               <div className="flex items-baseline gap-3">
                 <span className="font-display text-3xl font-bold text-primary">€{product.price.toFixed(2)}</span>
                 {product.original_price && (
@@ -197,21 +192,18 @@ const ProductDetail = () => {
                   </>
                 )}
               </div>
-              {/* Description */}
               <p className="text-muted-foreground leading-relaxed">
-                {product.description || `High-quality ${product.name.toLowerCase()}. Designed for professional and home use with advanced features for reliable performance.`}
+                {product.description || `Vysoko kvalitný ${product.name.toLowerCase()}. Navrhnutý pre profesionálne aj domáce použitie s pokročilými funkciami pre spoľahlivý výkon.`}
               </p>
-              {/* Stock */}
               <div className="flex items-center gap-6 text-sm">
                 <span className={`font-medium ${product.stock_quantity > 0 ? "text-green-500" : "text-destructive"}`}>
                   {product.stock_quantity === 0
-                    ? "● Out of Stock"
+                    ? "● Vypredané"
                     : product.stock_quantity > 5
-                      ? "● 5+ in stock"
-                      : `● ${product.stock_quantity} in stock`}
+                      ? "● 5+ skladom"
+                      : `● ${product.stock_quantity} skladom`}
                 </span>
               </div>
-              {/* Quantity & Add to Cart */}
               <div className="flex items-center gap-4">
                 <div className="flex items-center rounded-lg border border-border">
                   <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 text-muted-foreground hover:text-foreground transition-colors"><Minus className="h-4 w-4" /></button>
@@ -219,25 +211,23 @@ const ProductDetail = () => {
                   <button onClick={() => setQuantity(quantity + 1)} className="p-3 text-muted-foreground hover:text-foreground transition-colors"><Plus className="h-4 w-4" /></button>
                 </div>
                 <Button variant="electric" size="lg" className="flex-1" onClick={handleAddToCart}>
-                  <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+                  <ShoppingCart className="mr-2 h-5 w-5" /> Pridať do košíka
                 </Button>
               </div>
-              {/* Trust badges */}
               <div className="grid grid-cols-3 gap-4 rounded-xl border border-border bg-card p-4">
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <Truck className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">Free Shipping</span>
+                  <Truck className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">Doprava zadarmo</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <Shield className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">2-Year Warranty</span>
+                  <Shield className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">2-ročná záruka</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <RotateCcw className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">30-Day Returns</span>
+                  <RotateCcw className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">30-dňové vrátenie</span>
                 </div>
               </div>
 
-              {/* Additional Services */}
               <div className="rounded-xl border border-border bg-card p-4">
-                <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Additional Services</h3>
+                <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Doplnkové služby</h3>
                 <TooltipProvider delayDuration={200}>
                   <div className="space-y-3">
                     {additionalServices.map((service) => (
@@ -271,24 +261,23 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Tabs */}
           <Tabs defaultValue="description" className="mt-12">
             <TabsList className="w-full justify-start">
-              <TabsTrigger value="description">Description</TabsTrigger>
-              <TabsTrigger value="reviews">Reviews ({product.reviews_count ?? 0})</TabsTrigger>
+              <TabsTrigger value="description">Popis</TabsTrigger>
+              <TabsTrigger value="reviews">Recenzie ({product.reviews_count ?? 0})</TabsTrigger>
             </TabsList>
 
             <TabsContent value="description" className="mt-6">
               <div className="rounded-xl border border-border bg-card p-6">
                 <div className="prose prose-sm max-w-none text-muted-foreground">
-                  <p>{product.description || `The ${product.name} is engineered for maximum performance and reliability. Whether you're a professional mechanic or a DIY enthusiast, this product delivers consistent results every time.`}</p>
-                  <h3 className="text-foreground">Key Features</h3>
+                  <p>{product.description || `${product.name} je navrhnutý pre maximálny výkon a spoľahlivosť. Či ste profesionálny mechanik alebo domáci kutil, tento produkt poskytuje konzistentné výsledky zakaždým.`}</p>
+                  <h3 className="text-foreground">Hlavné vlastnosti</h3>
                   <ul>
-                    <li>Advanced safety protection against overcharge, short circuit, and reverse polarity</li>
-                    <li>Compact and portable design for easy storage and transportation</li>
-                    <li>LED indicators for real-time status monitoring</li>
-                    <li>Compatible with a wide range of vehicle types</li>
-                    <li>Built with premium materials for long-lasting durability</li>
+                    <li>Pokročilá bezpečnostná ochrana proti prebitiu, skratu a prepólovaniu</li>
+                    <li>Kompaktný a prenosný dizajn pre jednoduché skladovanie a prepravu</li>
+                    <li>LED indikátory pre sledovanie stavu v reálnom čase</li>
+                    <li>Kompatibilný so širokou škálou typov vozidiel</li>
+                    <li>Vyrobený z prémiových materiálov pre dlhú životnosť</li>
                   </ul>
                 </div>
               </div>
@@ -304,13 +293,13 @@ const ProductDetail = () => {
                         <Star key={i} className={`h-4 w-4 ${i < Math.floor(product.rating ?? 0) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
                       ))}
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{product.reviews_count ?? 0} reviews</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{product.reviews_count ?? 0} recenzií</p>
                   </div>
                 </div>
                 {[
-                  { author: "John D.", date: "2 weeks ago", rating: 5, text: "Excellent product! Works exactly as described. Very reliable and easy to use." },
-                  { author: "Sarah M.", date: "1 month ago", rating: 4, text: "Great value for the price. Solid build quality and performs well. Would recommend." },
-                  { author: "Mike R.", date: "2 months ago", rating: 5, text: "Been using this for a few months now. No issues whatsoever. Top quality." },
+                  { author: "Ján D.", date: "pred 2 týždňami", rating: 5, text: "Výborný produkt! Funguje presne ako je popísané. Veľmi spoľahlivý a jednoduchý na použitie." },
+                  { author: "Zuzana M.", date: "pred 1 mesiacom", rating: 4, text: "Skvelá hodnota za cenu. Solídna kvalita a funguje dobre. Odporúčam." },
+                  { author: "Michal R.", date: "pred 2 mesiacmi", rating: 5, text: "Používam to už niekoľko mesiacov. Žiadne problémy. Vysoká kvalita." },
                 ].map((review, i) => (
                   <div key={i} className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}>
                     <div className="mb-2 flex items-center justify-between">

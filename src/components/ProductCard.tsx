@@ -53,36 +53,34 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
       if (isBookmarked) {
         await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("product_id", id);
         setIsBookmarked(false);
-        toast.info("Bookmark removed");
+        toast.info("Záložka odstránená");
       } else {
         await supabase.from("bookmarks").insert({ user_id: user.id, product_id: id });
         setIsBookmarked(true);
-        toast.success("Bookmarked!");
+        toast.success("Pridané do záložiek!");
       }
     } else {
       const local: string[] = JSON.parse(localStorage.getItem("guest_bookmarks") || "[]");
       if (isBookmarked) {
         localStorage.setItem("guest_bookmarks", JSON.stringify(local.filter((b) => b !== id)));
         setIsBookmarked(false);
-        toast.info("Bookmark removed");
+        toast.info("Záložka odstránená");
       } else {
         localStorage.setItem("guest_bookmarks", JSON.stringify([...local, id]));
         setIsBookmarked(true);
-        toast.success("Bookmarked!");
+        toast.success("Pridané do záložiek!");
       }
     }
   };
 
   return (
     <Link to={`/product/${slug}`} className="group relative block overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-glow">
-      {/* Badge */}
       {badge && (
         <div className="absolute left-3 top-3 z-10 rounded-lg bg-primary px-3 py-1">
           <span className="text-xs font-bold uppercase text-primary-foreground">{badge}</span>
         </div>
       )}
 
-      {/* Bookmark button - only for authenticated users */}
       {user && (
         <button
           onClick={toggleBookmark}
@@ -92,7 +90,6 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
         </button>
       )}
 
-      {/* Discount badge */}
       {originalPrice && (
         <div className="absolute left-3 top-12 z-10 rounded-lg bg-destructive/10 px-2.5 py-1">
           <span className="text-sm font-semibold text-destructive">
@@ -101,7 +98,6 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
         </div>
       )}
       
-      {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-secondary/30">
         <img
           src={image}
@@ -110,13 +106,11 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
         />
       </div>
       
-      {/* Content */}
       <div className="flex flex-1 flex-col p-4">
         <h3 className="mb-2 font-display text-sm font-semibold tracking-wide text-foreground line-clamp-2">
           {name}
         </h3>
         
-        {/* Rating */}
         <div className="mb-3 flex items-center gap-2">
           <div className="flex items-center gap-0.5">
             {[...Array(5)].map((_, i) => (
@@ -133,7 +127,6 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
           <span className="text-xs text-muted-foreground">({reviews})</span>
         </div>
         
-        {/* Stock */}
         {stockQuantity !== undefined && (
           <div className="mb-3">
             <span className={`text-xs font-medium ${
@@ -143,15 +136,14 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
               : "text-green-500"
             }`}>
               {stockQuantity === 0
-                ? "Out of stock"
+                ? "Vypredané"
                 : stockQuantity > 5
-                  ? "5+ in stock"
-                  : `${stockQuantity} in stock`}
+                  ? "5+ skladom"
+                  : `${stockQuantity} skladom`}
             </span>
           </div>
         )}
 
-        {/* Price & Add to Cart */}
         <div className="mt-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-display text-lg font-bold text-primary">€{price.toFixed(2)}</span>

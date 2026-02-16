@@ -14,40 +14,40 @@ const OrderConfirmation = () => {
         </div>
 
         <div className="space-y-2">
-          <h1 className="font-display text-3xl">Order Confirmed!</h1>
+          <h1 className="font-display text-3xl">Objednávka potvrdená!</h1>
           <p className="text-muted-foreground">
-            Thank you for your purchase. Your order has been received and is being processed.
+            Ďakujeme za váš nákup. Vaša objednávka bola prijatá a spracováva sa.
           </p>
         </div>
 
         <div className="bg-card rounded-xl p-6 border border-border space-y-4">
           <div className="text-left">
-            <p className="text-sm text-muted-foreground">Order Number</p>
+            <p className="text-sm text-muted-foreground">Číslo objednávky</p>
             <p className="font-display text-xl text-primary">{orderNumber}</p>
           </div>
 
           <div className="flex gap-4 pt-4 border-t border-border">
             <div className="flex-1 text-center">
               <Package className="h-6 w-6 mx-auto text-primary mb-2" />
-              <p className="text-xs text-muted-foreground">Processing</p>
+              <p className="text-xs text-muted-foreground">Spracovanie</p>
             </div>
             <div className="flex-1 text-center opacity-50">
               <Truck className="h-6 w-6 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Shipping</p>
+              <p className="text-xs text-muted-foreground">Odoslanie</p>
             </div>
             <div className="flex-1 text-center opacity-50">
               <CheckCircle className="h-6 w-6 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Delivered</p>
+              <p className="text-xs text-muted-foreground">Doručené</p>
             </div>
           </div>
         </div>
 
         <p className="text-sm text-muted-foreground">
-          A confirmation email will be sent to your email address with tracking information.
+          Potvrdzujúci e-mail s informáciami o sledovaní bude odoslaný na vašu e-mailovú adresu.
         </p>
 
         <Button variant="electric" size="lg" onClick={() => navigate("/")}>
-          Continue Shopping
+          Pokračovať v nákupe
         </Button>
       </div>
     </div>

@@ -41,7 +41,7 @@ const FeaturedProducts = () => {
     : products.filter((p) => p.category_id === activeCategory);
 
   const filterOptions = [
-    { value: "all", label: "All Products" },
+    { value: "all", label: "Všetky produkty" },
     ...categories.map((c) => ({ value: c.id, label: c.name })),
   ];
 
@@ -50,10 +50,10 @@ const FeaturedProducts = () => {
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Featured <span className="text-primary">Products</span>
+            Odporúčané <span className="text-primary">produkty</span>
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            Discover our top-rated battery chargers, jump starters, and compressors trusted by professionals and enthusiasts worldwide.
+            Objavte naše najlepšie nabíjačky batérií, štartovacie boxy a kompresory, ktorým dôverujú profesionáli aj nadšenci po celom svete.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

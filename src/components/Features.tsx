@@ -3,33 +3,33 @@ import { Shield, Truck, Zap, Award, RefreshCw, CreditCard } from "lucide-react";
 const features = [
   {
     icon: Truck,
-    title: "Free Shipping",
-    description: "Free delivery to Z-BOX / Z-POINT on orders over €40.",
+    title: "Doprava zadarmo",
+    description: "Bezplatné doručenie do Z-BOXu / Z-POINTu pri objednávke nad 40 €.",
   },
   {
     icon: Shield,
-    title: "365-Day Warranty",
-    description: "All products come with a comprehensive 365-day warranty.",
+    title: "Záruka 365 dní",
+    description: "Všetky produkty sú kryté komplexnou zárukou 365 dní.",
   },
   {
     icon: Zap,
-    title: "Same-Day Shipping",
-    description: "Order before 2 PM and we ship the same day.",
+    title: "Odoslanie v ten istý deň",
+    description: "Objednajte do 14:00 a odošleme v ten istý deň.",
   },
   {
     icon: Award,
-    title: "Quality Assured",
-    description: "Every product tested and certified for performance.",
+    title: "Zaručená kvalita",
+    description: "Každý produkt je testovaný a certifikovaný pre vysoký výkon.",
   },
   {
     icon: RefreshCw,
-    title: "Easy Returns",
-    description: "30-day hassle-free return policy on all items.",
+    title: "Jednoduché vrátenie",
+    description: "30-dňová politika vrátenia tovaru bez problémov.",
   },
   {
     icon: CreditCard,
-    title: "Secure Payment",
-    description: "Multiple secure payment options for your convenience.",
+    title: "Bezpečná platba",
+    description: "Viacero bezpečných platobných možností pre vaše pohodlie.",
   },
 ];
 
@@ -37,17 +37,15 @@ const Features = () => {
   return (
     <section id="features" className="py-20">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Why Choose <span className="text-primary">VoltCharge</span>
+            Prečo si vybrať <span className="text-primary">VoltCharge</span>
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            We're committed to providing the best products and service in the industry.
+            Sme odhodlaní poskytovať najlepšie produkty a služby v odvetví.
           </p>
         </div>
         
-        {/* Features Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => {
             const Icon = feature.icon;

@@ -25,10 +25,10 @@ interface Order {
 const STATUS_STEPS = ["pending", "processing", "shipped", "delivered"];
 
 const STATUS_CONFIG: Record<string, { label: string; icon: any; color: string }> = {
-  pending: { label: "Pending", icon: Clock, color: "text-yellow-500" },
-  processing: { label: "Processing", icon: Package, color: "text-blue-500" },
-  shipped: { label: "Shipped", icon: Truck, color: "text-purple-500" },
-  delivered: { label: "Delivered", icon: CheckCircle2, color: "text-green-500" },
+  pending: { label: "Čakajúca", icon: Clock, color: "text-yellow-500" },
+  processing: { label: "Spracováva sa", icon: Package, color: "text-blue-500" },
+  shipped: { label: "Odoslaná", icon: Truck, color: "text-purple-500" },
+  delivered: { label: "Doručená", icon: CheckCircle2, color: "text-green-500" },
 };
 
 const AccountOrders = () => {
@@ -80,19 +80,19 @@ const AccountOrders = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">Current Orders</h1>
-        <p className="text-sm text-muted-foreground">Track your active orders</p>
+        <h1 className="font-display text-2xl font-bold">Aktuálne objednávky</h1>
+        <p className="text-sm text-muted-foreground">Sledujte svoje aktívne objednávky</p>
       </div>
 
       {orders.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <Package className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-          <h2 className="font-display text-lg font-semibold">No active orders</h2>
+          <h2 className="font-display text-lg font-semibold">Žiadne aktívne objednávky</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            You don't have any active orders right now.
+            Momentálne nemáte žiadne aktívne objednávky.
           </p>
           <Link to="/">
-            <Button variant="electric" className="mt-4">Start Shopping</Button>
+            <Button variant="electric" className="mt-4">Začať nakupovať</Button>
           </Link>
         </div>
       ) : (
@@ -107,7 +107,7 @@ const AccountOrders = () => {
                   <div>
                     <p className="font-display text-lg font-bold">{order.order_number}</p>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(order.created_at).toLocaleDateString("en-US", {
+                      {new Date(order.created_at).toLocaleDateString("sk-SK", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
@@ -120,7 +120,6 @@ const AccountOrders = () => {
                   </div>
                 </div>
 
-                {/* Progress bar */}
                 <div className="mb-6">
                   <div className="flex items-center justify-between">
                     {STATUS_STEPS.map((step, i) => {
@@ -149,7 +148,6 @@ const AccountOrders = () => {
                   </div>
                 </div>
 
-                {/* Order items */}
                 <div className="space-y-3 border-t border-border pt-4">
                   {order.items.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
@@ -160,7 +158,7 @@ const AccountOrders = () => {
                       />
                       <div className="flex-1">
                         <p className="text-sm font-medium">{item.product_name}</p>
-                        <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                        <p className="text-xs text-muted-foreground">Ks: {item.quantity}</p>
                       </div>
                       <p className="text-sm font-medium">€{(item.price * item.quantity).toFixed(2)}</p>
                     </div>
@@ -169,7 +167,7 @@ const AccountOrders = () => {
 
                 <div className="mt-4 flex justify-end border-t border-border pt-4">
                   <p className="font-display text-lg font-bold">
-                    Total: <span className="text-primary">€{Number(order.total).toFixed(2)}</span>
+                    Celkom: <span className="text-primary">€{Number(order.total).toFixed(2)}</span>
                   </p>
                 </div>
               </div>

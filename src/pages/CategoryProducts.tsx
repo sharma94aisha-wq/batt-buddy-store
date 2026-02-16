@@ -31,7 +31,7 @@ type SortOption = "default" | "price-asc" | "price-desc" | "rating" | "name";
 const CategoryProducts = () => {
   const { slug } = useParams<{ slug: string }>();
   const [products, setProducts] = useState<DBProduct[]>([]);
-  const [categoryName, setCategoryName] = useState("Products");
+  const [categoryName, setCategoryName] = useState("Produkty");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -102,27 +102,27 @@ const CategoryProducts = () => {
   const FilterSidebar = () => (
     <div className="space-y-8">
       <div>
-        <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Sort By</h3>
+        <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Zoradiť podľa</h3>
         <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
-          <SelectTrigger className="w-full"><SelectValue placeholder="Default" /></SelectTrigger>
+          <SelectTrigger className="w-full"><SelectValue placeholder="Predvolené" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="default">Default</SelectItem>
-            <SelectItem value="price-asc">Price: Low to High</SelectItem>
-            <SelectItem value="price-desc">Price: High to Low</SelectItem>
-            <SelectItem value="rating">Best Rating</SelectItem>
-            <SelectItem value="name">Name A-Z</SelectItem>
+            <SelectItem value="default">Predvolené</SelectItem>
+            <SelectItem value="price-asc">Cena: od najnižšej</SelectItem>
+            <SelectItem value="price-desc">Cena: od najvyššej</SelectItem>
+            <SelectItem value="rating">Najlepšie hodnotené</SelectItem>
+            <SelectItem value="name">Názov A-Z</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Price Range</h3>
+        <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Cenový rozsah</h3>
         <Slider min={0} max={maxPrice} step={5} value={priceRange} onValueChange={setPriceRange} className="mb-3" />
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <span>€{priceRange[0]}</span>
           <span>€{priceRange[1]}</span>
         </div>
       </div>
-      <Button variant="outline" className="w-full" onClick={resetFilters}>Reset Filters</Button>
+      <Button variant="outline" className="w-full" onClick={resetFilters}>Resetovať filtre</Button>
     </div>
   );
 
@@ -136,11 +136,11 @@ const CategoryProducts = () => {
             <div>
               <h1 className="font-display text-2xl font-bold text-foreground md:text-3xl">{categoryName}</h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""} found
+                {filteredProducts.length} {filteredProducts.length === 1 ? "produkt" : filteredProducts.length >= 2 && filteredProducts.length <= 4 ? "produkty" : "produktov"}
               </p>
             </div>
             <Button variant="outline" className="lg:hidden" onClick={() => setShowMobileFilters(true)}>
-              <SlidersHorizontal className="mr-2 h-4 w-4" /> Filters
+              <SlidersHorizontal className="mr-2 h-4 w-4" /> Filtre
             </Button>
           </div>
 
@@ -150,7 +150,7 @@ const CategoryProducts = () => {
                 <div className="absolute inset-0 bg-background/80" onClick={() => setShowMobileFilters(false)} />
                 <div className="absolute right-0 top-0 h-full w-80 max-w-full overflow-y-auto border-l border-border bg-card p-6">
                   <div className="mb-6 flex items-center justify-between">
-                    <h2 className="font-display text-lg font-semibold text-foreground">Filters</h2>
+                    <h2 className="font-display text-lg font-semibold text-foreground">Filtre</h2>
                     <button onClick={() => setShowMobileFilters(false)}><X className="h-5 w-5 text-muted-foreground" /></button>
                   </div>
                   <FilterSidebar />
@@ -161,8 +161,8 @@ const CategoryProducts = () => {
             <div className="flex-1">
               {filteredProducts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-card py-20 text-center">
-                  <p className="text-lg text-muted-foreground">{loading ? "Loading..." : "No products match your filters."}</p>
-                  {!loading && <Button variant="electric" className="mt-4" onClick={resetFilters}>Reset Filters</Button>}
+                  <p className="text-lg text-muted-foreground">{loading ? "Načítavam..." : "Žiadne produkty nezodpovedajú vašim filtrom."}</p>
+                  {!loading && <Button variant="electric" className="mt-4" onClick={resetFilters}>Resetovať filtre</Button>}
                 </div>
               ) : (
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

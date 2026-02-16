@@ -8,36 +8,36 @@ const Warranty = () => (
     <Header />
     <main className="pt-24 pb-12">
       <div className="container mx-auto max-w-3xl px-4">
-        <PageBreadcrumb items={[{ label: "Warranty" }]} />
+        <PageBreadcrumb items={[{ label: "Záruka" }]} />
         <div className="flex items-center gap-3">
           <Shield className="h-8 w-8 text-primary" />
-          <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Warranty</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Záruka</h1>
         </div>
-        <p className="mt-2 text-muted-foreground">All VoltCharge products are built to last and backed by our warranty.</p>
+        <p className="mt-2 text-muted-foreground">Všetky produkty VoltCharge sú vyrobené tak, aby vydržali, a sú kryté našou zárukou.</p>
         <div className="mt-8 space-y-6 text-sm text-muted-foreground">
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
-            <h2 className="font-display text-lg font-semibold text-foreground">2-Year Limited Warranty</h2>
-            <p>Every product purchased from VoltCharge is covered by a 2-year limited warranty from the date of purchase. This warranty covers defects in materials and workmanship under normal use.</p>
+            <h2 className="font-display text-lg font-semibold text-foreground">2-ročná obmedzená záruka</h2>
+            <p>Každý produkt zakúpený od VoltCharge je krytý 2-ročnou obmedzenou zárukou od dátumu nákupu. Táto záruka pokrýva chyby materiálu a spracovania pri bežnom používaní.</p>
           </section>
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
-            <h2 className="font-display text-lg font-semibold text-foreground">What's Covered</h2>
+            <h2 className="font-display text-lg font-semibold text-foreground">Čo je kryté</h2>
             <ul className="list-disc space-y-1 pl-5">
-              <li>Manufacturing defects</li>
-              <li>Faulty components or electronics</li>
-              <li>Premature failure under normal use conditions</li>
+              <li>Výrobné chyby</li>
+              <li>Chybné komponenty alebo elektronika</li>
+              <li>Predčasné zlyhanie pri bežnom používaní</li>
             </ul>
           </section>
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
-            <h2 className="font-display text-lg font-semibold text-foreground">What's Not Covered</h2>
+            <h2 className="font-display text-lg font-semibold text-foreground">Čo nie je kryté</h2>
             <ul className="list-disc space-y-1 pl-5">
-              <li>Damage from misuse, accidents, or unauthorized modifications</li>
-              <li>Normal wear and tear</li>
-              <li>Products purchased from unauthorized retailers</li>
+              <li>Poškodenie nesprávnym používaním, nehodami alebo neoprávnenými úpravami</li>
+              <li>Bežné opotrebenie</li>
+              <li>Produkty zakúpené od neautorizovaných predajcov</li>
             </ul>
           </section>
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
-            <h2 className="font-display text-lg font-semibold text-foreground">How to Make a Claim</h2>
-            <p>Email support@voltcharge.com with your order number, a description of the issue, and photos if applicable. Our team will respond within 48 hours.</p>
+            <h2 className="font-display text-lg font-semibold text-foreground">Ako podať reklamáciu</h2>
+            <p>Napíšte na podpora@voltcharge.sk s číslom objednávky, popisom problému a prípadnými fotografiami. Náš tím odpovie do 48 hodín.</p>
           </section>
         </div>
       </div>

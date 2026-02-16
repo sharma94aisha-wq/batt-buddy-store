@@ -30,16 +30,16 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden items-center gap-8 md:flex">
               <a href="#products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                Products
+                Produkty
               </a>
               <a href="#categories" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                Categories
+                Kategórie
               </a>
               <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                Why Us
+                Prečo my
               </a>
               <a href="#contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                Contact
+                Kontakt
               </a>
             </nav>
 
@@ -59,7 +59,7 @@ const Header = () => {
                 )}
               </Button>
               <Button variant="electric" size="sm" className="hidden md:flex">
-                Shop Now
+                Nakupovať
               </Button>
               <Button
                 variant="ghost"
@@ -77,22 +77,22 @@ const Header = () => {
             <nav className="border-t border-border py-4 md:hidden">
               <div className="flex flex-col gap-4">
                 <a href="#products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                  Products
+                  Produkty
                 </a>
                 <a href="#categories" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                  Categories
+                  Kategórie
                 </a>
                 <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                  Why Us
+                  Prečo my
                 </a>
                 <a href="#contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                  Contact
+                  Kontakt
                 </a>
                 <Link to={user ? "/account" : "/auth"} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                  {user ? "My Account" : "Sign In"}
+                  {user ? "Môj účet" : "Prihlásiť sa"}
                 </Link>
                 <Button variant="electric" size="sm">
-                  Shop Now
+                  Nakupovať
                 </Button>
               </div>
             </nav>
