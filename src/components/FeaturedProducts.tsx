@@ -36,7 +36,7 @@ const FeaturedProducts = () => {
               <button
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
-                className={`rounded-full border px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
+                className={`rounded-lg border px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
                   activeCategory === cat.value
                     ? "border-primary bg-primary text-primary-foreground shadow-glow"
                     : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
