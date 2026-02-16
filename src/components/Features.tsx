@@ -1,20 +1,20 @@
-import { Shield, Truck, HeadphonesIcon, Award, RefreshCw, CreditCard } from "lucide-react";
+import { Shield, Truck, Zap, Award, RefreshCw, CreditCard } from "lucide-react";
 
 const features = [
   {
     icon: Truck,
     title: "Free Shipping",
-    description: "Free delivery on orders over $75. Fast & reliable shipping.",
+    description: "Free delivery to Z-BOX / Z-POINT on orders over €40.",
   },
   {
     icon: Shield,
-    title: "2-Year Warranty",
-    description: "All products come with comprehensive manufacturer warranty.",
+    title: "365-Day Warranty",
+    description: "All products come with a comprehensive 365-day warranty.",
   },
   {
-    icon: HeadphonesIcon,
-    title: "24/7 Support",
-    description: "Expert technical support available around the clock.",
+    icon: Zap,
+    title: "Same-Day Shipping",
+    description: "Order before 2 PM and we ship the same day.",
   },
   {
     icon: Award,
