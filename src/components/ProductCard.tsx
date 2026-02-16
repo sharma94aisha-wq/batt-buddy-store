@@ -25,15 +25,15 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
     <Link to={`/product/${id}`} className="group relative block overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-glow">
       {/* Badge */}
       {badge && (
-        <div className="absolute left-3 top-3 z-10 rounded-full bg-primary px-3 py-1">
+        <div className="absolute left-3 top-3 z-10 rounded-lg bg-primary px-3 py-1">
           <span className="text-xs font-bold uppercase text-primary-foreground">{badge}</span>
         </div>
       )}
 
       {/* Discount badge */}
       {originalPrice && (
-        <div className="absolute right-3 top-3 z-10 rounded-full bg-destructive px-2.5 py-1">
-          <span className="text-xs font-bold text-destructive-foreground">
+        <div className="absolute right-3 top-3 z-10 rounded-lg bg-destructive/10 px-2.5 py-1">
+          <span className="text-sm font-semibold text-destructive">
             -{Math.round(((originalPrice - price) / originalPrice) * 100)}%
           </span>
         </div>

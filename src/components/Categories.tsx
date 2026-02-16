@@ -44,9 +44,9 @@ const Categories = () => {
               <Link
                 key={category.slug}
                 to={`/category/${category.slug}`}
-                className="group flex items-center gap-4 rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-glow"
+                className="group flex items-center gap-4 rounded-lg border border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-glow"
               >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary">
                   <Icon className="h-7 w-7 text-primary transition-colors group-hover:text-primary-foreground" />
                 </div>
                 <div>
