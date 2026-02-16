@@ -85,22 +85,13 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart({ id: product.id, image: product.image, name: product.name, price: product.price });
-    }
-    // Add selected services as separate cart items
-    selectedServices.forEach((serviceId) => {
-      const service = additionalServices.find((s) => s.id === serviceId);
-      if (service) {
-        const serviceCartId = product.id * 10000 + (serviceId === "warranty-1" ? 1 : serviceId === "warranty-2" ? 2 : 3);
-        addToCart({
-          id: serviceCartId,
-          image: product.image,
-          name: `${service.label} (${product.name})`,
-          price: service.price,
-        });
-      }
+    const addons = selectedServices.map((serviceId) => {
+      const service = additionalServices.find((s) => s.id === serviceId)!;
+      return { id: service.id, label: service.label, price: service.price };
     });
+    for (let i = 0; i < quantity; i++) {
+      addToCart({ id: product.id, image: product.image, name: product.name, price: product.price, addons: addons.length > 0 ? addons : undefined });
+    }
     setSelectedServices([]);
   };
 

@@ -1,12 +1,19 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { toast } from "sonner";
 
+export interface CartAddon {
+  id: string;
+  label: string;
+  price: number;
+}
+
 export interface CartItem {
   id: number;
   image: string;
   name: string;
   price: number;
   quantity: number;
+  addons?: CartAddon[];
 }
 
 interface PromoCode {
@@ -25,6 +32,7 @@ interface CartContextType {
   items: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   removeFromCart: (id: number) => void;
+  removeAddon: (itemId: number, addonId: string) => void;
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
@@ -65,6 +73,17 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     toast.info("Item removed from cart");
   };
 
+  const removeAddon = (itemId: number, addonId: string) => {
+    setItems((prev) =>
+      prev.map((i) =>
+        i.id === itemId
+          ? { ...i, addons: (i.addons || []).filter((a) => a.id !== addonId) }
+          : i
+      )
+    );
+    toast.info("Add-on removed");
+  };
+
   const updateQuantity = (id: number, quantity: number) => {
     if (quantity < 1) {
       removeFromCart(id);
@@ -100,10 +119,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const totalPrice = items.reduce((sum, item) => {
+    const addonsTotal = (item.addons || []).reduce((a, addon) => a + addon.price, 0);
+    return sum + (item.price + addonsTotal) * item.quantity;
+  }, 0);
   const discountAmount = promoCode ? totalPrice * (promoCode.discount / 100) : 0;
   const finalPrice = totalPrice - discountAmount;
 
@@ -113,6 +132,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         items,
         addToCart,
         removeFromCart,
+        removeAddon,
         updateQuantity,
         clearCart,
         totalItems,

@@ -4,13 +4,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, Trash2, ShoppingBag, Tag, X } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Tag, X, CornerDownRight } from "lucide-react";
 import FreeShippingProgress from "@/components/FreeShippingProgress";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
   const {
-    items, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity,
+    items, isCartOpen, setIsCartOpen, removeFromCart, removeAddon, updateQuantity,
     totalPrice, clearCart, promoCode, applyPromoCode, removePromoCode,
     discountAmount, finalPrice,
   } = useCart();
@@ -48,24 +48,44 @@ const CartDrawer = () => {
             <div className="flex-1 overflow-auto py-4">
               <div className="space-y-4">
                 {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 rounded-lg border border-border bg-card p-3">
-                    <img src={item.image} alt={item.name} className="h-20 w-20 rounded-md object-cover" />
-                    <div className="flex flex-1 flex-col">
-                      <h4 className="font-medium text-sm line-clamp-2">{item.name}</h4>
-                      <span className="text-primary font-bold">${item.price.toFixed(2)}</span>
-                      <div className="mt-auto flex items-center gap-2">
-                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
-                          <Minus className="h-3 w-3" />
-                        </Button>
-                        <span className="w-8 text-center text-sm">{item.quantity}</span>
-                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
-                          <Plus className="h-3 w-3" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 ml-auto text-destructive hover:text-destructive" onClick={() => removeFromCart(item.id)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                  <div key={item.id} className="rounded-lg border border-border bg-card p-3 space-y-2">
+                    <div className="flex gap-4">
+                      <img src={item.image} alt={item.name} className="h-20 w-20 rounded-md object-cover" />
+                      <div className="flex flex-1 flex-col">
+                        <h4 className="font-medium text-sm line-clamp-2">{item.name}</h4>
+                        <span className="text-primary font-bold">${item.price.toFixed(2)}</span>
+                        <div className="mt-auto flex items-center gap-2">
+                          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="w-8 text-center text-sm">{item.quantity}</span>
+                          <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 ml-auto text-destructive hover:text-destructive" onClick={() => removeFromCart(item.id)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
+                    {item.addons && item.addons.length > 0 && (
+                      <div className="ml-6 space-y-1">
+                        {item.addons.map((addon) => (
+                          <div key={addon.id} className="flex items-center justify-between text-sm">
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <CornerDownRight className="h-3 w-3" />
+                              <span>{addon.label}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-primary font-medium">${addon.price.toFixed(2)}</span>
+                              <Button variant="ghost" size="icon" className="h-5 w-5 text-destructive hover:text-destructive" onClick={() => removeAddon(item.id, addon.id)}>
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
