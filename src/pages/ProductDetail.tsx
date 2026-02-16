@@ -1,23 +1,47 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play, Info } from "lucide-react";
+import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
-import type { ProductCategory } from "@/data/products";
 
-const SuggestedProducts = ({ category }: { category: ProductCategory }) => {
-  const suggested = useMemo(() => {
-    const others = products.filter((p) => p.category !== category);
-    return [...others].sort(() => Math.random() - 0.5).slice(0, 5);
-  }, [category]);
+interface DBProduct {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+  original_price: number | null;
+  image_url: string | null;
+  rating: number | null;
+  reviews_count: number | null;
+  badge: string | null;
+  stock_quantity: number;
+  category_id: string | null;
+  description: string | null;
+}
+
+const SuggestedProducts = ({ categoryId, currentId }: { categoryId: string | null; currentId: string }) => {
+  const [suggested, setSuggested] = useState<DBProduct[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_active", true)
+        .neq("id", currentId)
+        .limit(5);
+      if (data) setSuggested(data as unknown as DBProduct[]);
+    };
+    fetch();
+  }, [currentId]);
 
   return (
     <section className="mt-16">
@@ -27,14 +51,15 @@ const SuggestedProducts = ({ category }: { category: ProductCategory }) => {
           <ProductCard
             key={p.id}
             id={p.id}
-            image={p.image}
+            slug={p.slug}
+            image={p.image_url || "/placeholder.svg"}
             name={p.name}
             price={p.price}
-            originalPrice={p.originalPrice}
-            rating={p.rating}
-            reviews={p.reviews}
-            badge={p.badge}
-            stockQuantity={p.stockQuantity}
+            originalPrice={p.original_price ?? undefined}
+            rating={p.rating ?? 0}
+            reviews={p.reviews_count ?? 0}
+            badge={p.badge ?? undefined}
+            stockQuantity={p.stock_quantity}
           />
         ))}
       </div>
@@ -43,12 +68,46 @@ const SuggestedProducts = ({ category }: { category: ProductCategory }) => {
 };
 
 const ProductDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const product = products.find((p) => p.id === Number(id));
+  const { id: slugParam } = useParams<{ id: string }>();
   const { addToCart } = useCart();
+  const [product, setProduct] = useState<DBProduct | null>(null);
+  const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      // Try by slug first, then by id
+      let { data } = await supabase
+        .from("products")
+        .select("*")
+        .eq("slug", slugParam!)
+        .maybeSingle();
+      
+      if (!data) {
+        const res = await supabase.from("products").select("*").eq("id", slugParam!).maybeSingle();
+        data = res.data;
+      }
+      
+      setProduct(data as unknown as DBProduct | null);
+      setLoading(false);
+    };
+    fetchProduct();
+  }, [slugParam]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto flex items-center justify-center px-4 py-20">
+          <p className="text-muted-foreground">Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -63,10 +122,9 @@ const ProductDetail = () => {
     );
   }
 
-  const categoryLabel = product.category === "charger" ? "Chargers" : product.category === "jump-starter" ? "Jump Starters" : "Compressors";
-  const allImages = product.images?.length ? product.images : [product.image, product.image, product.image];
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const allImages = [product.image_url || "/placeholder.svg"];
+  const discount = product.original_price
+    ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : 0;
 
   const warranty1Price = Math.round(product.price * 0.3 * 100) / 100;
@@ -90,7 +148,7 @@ const ProductDetail = () => {
       return { id: service.id, label: service.label, price: service.price };
     });
     for (let i = 0; i < quantity; i++) {
-      addToCart({ id: product.id, image: product.image, name: product.name, price: product.price, addons: addons.length > 0 ? addons : undefined });
+      addToCart({ id: product.id, image: product.image_url || "/placeholder.svg", name: product.name, price: product.price, addons: addons.length > 0 ? addons : undefined });
     }
     setSelectedServices([]);
   };
@@ -100,28 +158,13 @@ const ProductDetail = () => {
       <Header />
       <main className="pt-24 pb-8">
         <div className="container mx-auto px-4">
-          <PageBreadcrumb items={[
-            { label: categoryLabel, href: `/category/${product.category}` },
-            { label: product.name },
-          ]} />
+          <PageBreadcrumb items={[{ label: product.name }]} />
 
-          {/* Product Section */}
           <div className="grid gap-8 lg:grid-cols-2">
             {/* Images */}
             <div className="space-y-4">
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <img src={allImages[selectedImage]} alt={product.name} className="aspect-square w-full object-cover" />
-              </div>
-              <div className="flex gap-3">
-                {allImages.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedImage(i)}
-                    className={`w-20 overflow-hidden rounded-lg border-2 transition-colors ${selectedImage === i ? "border-primary" : "border-border hover:border-primary/50"}`}
-                  >
-                    <img src={img} alt="" className="aspect-square w-full object-cover" />
-                  </button>
-                ))}
               </div>
             </div>
 
@@ -133,41 +176,39 @@ const ProductDetail = () => {
                 </span>
               )}
               <div>
-                <p className="text-sm text-muted-foreground">{product.brand}</p>
                 <h1 className="mt-1 font-display text-2xl font-bold text-foreground md:text-3xl">{product.name}</h1>
               </div>
               {/* Rating */}
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
+                    <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating ?? 0) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
                   ))}
                 </div>
-                <span className="text-sm text-muted-foreground">{product.rating} ({product.reviews} reviews)</span>
+                <span className="text-sm text-muted-foreground">{product.rating ?? 0} ({product.reviews_count ?? 0} reviews)</span>
               </div>
               {/* Price */}
               <div className="flex items-baseline gap-3">
                 <span className="font-display text-3xl font-bold text-primary">€{product.price.toFixed(2)}</span>
-                {product.originalPrice && (
+                {product.original_price && (
                   <>
-                    <span className="text-lg text-muted-foreground line-through">€{product.originalPrice.toFixed(2)}</span>
+                    <span className="text-lg text-muted-foreground line-through">€{product.original_price.toFixed(2)}</span>
                     <span className="rounded bg-destructive/10 px-2 py-0.5 text-sm font-semibold text-destructive">-{discount}%</span>
                   </>
                 )}
               </div>
               {/* Description */}
               <p className="text-muted-foreground leading-relaxed">
-                {product.description || `High-quality ${product.name.toLowerCase()} from ${product.brand}. Designed for professional and home use with advanced features for reliable performance.`}
+                {product.description || `High-quality ${product.name.toLowerCase()}. Designed for professional and home use with advanced features for reliable performance.`}
               </p>
-              {/* SKU & Stock */}
+              {/* Stock */}
               <div className="flex items-center gap-6 text-sm">
-                <span className="text-muted-foreground">SKU: <span className="text-foreground">{product.sku || `SKU-${product.id.toString().padStart(4, "0")}`}</span></span>
-                <span className={`font-medium ${(product.stockQuantity ?? 1) > 0 ? "text-green-500" : "text-destructive"}`}>
-                  {(product.stockQuantity ?? 1) === 0
+                <span className={`font-medium ${product.stock_quantity > 0 ? "text-green-500" : "text-destructive"}`}>
+                  {product.stock_quantity === 0
                     ? "● Out of Stock"
-                    : (product.stockQuantity ?? 1) > 5
+                    : product.stock_quantity > 5
                       ? "● 5+ in stock"
-                      : `● ${product.stockQuantity} in stock`}
+                      : `● ${product.stock_quantity} in stock`}
                 </span>
               </div>
               {/* Quantity & Add to Cart */}
@@ -231,40 +272,16 @@ const ProductDetail = () => {
           </div>
 
           {/* Tabs */}
-          <Tabs defaultValue="specs" className="mt-12">
+          <Tabs defaultValue="description" className="mt-12">
             <TabsList className="w-full justify-start">
-              <TabsTrigger value="specs">Specifications</TabsTrigger>
               <TabsTrigger value="description">Description</TabsTrigger>
-              <TabsTrigger value="media">Foto a video</TabsTrigger>
-              <TabsTrigger value="reviews">Reviews ({product.reviews})</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews ({product.reviews_count ?? 0})</TabsTrigger>
             </TabsList>
-
-            <TabsContent value="specs" className="mt-6">
-              <div className="rounded-xl border border-border bg-card p-6">
-                <table className="w-full">
-                  <tbody>
-                    {Object.entries(product.specs || {
-                      "Brand": product.brand,
-                      "Category": product.category === "charger" ? "Battery Charger" : product.category === "jump-starter" ? "Jump Starter" : "Compressor",
-                      "Voltage": product.name.includes("24V") ? "24V" : "12V",
-                      "Warranty": "2 Years",
-                      "Weight": "2.5 kg",
-                      "Dimensions": "25 × 15 × 10 cm",
-                    }).map(([key, value], i) => (
-                      <tr key={key} className={i % 2 === 0 ? "bg-muted/30" : ""}>
-                        <td className="px-4 py-3 text-sm font-medium text-foreground">{key}</td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </TabsContent>
 
             <TabsContent value="description" className="mt-6">
               <div className="rounded-xl border border-border bg-card p-6">
                 <div className="prose prose-sm max-w-none text-muted-foreground">
-                  <p>{product.description || `The ${product.name} by ${product.brand} is engineered for maximum performance and reliability. Whether you're a professional mechanic or a DIY enthusiast, this product delivers consistent results every time.`}</p>
+                  <p>{product.description || `The ${product.name} is engineered for maximum performance and reliability. Whether you're a professional mechanic or a DIY enthusiast, this product delivers consistent results every time.`}</p>
                   <h3 className="text-foreground">Key Features</h3>
                   <ul>
                     <li>Advanced safety protection against overcharge, short circuit, and reverse polarity</li>
@@ -277,65 +294,23 @@ const ProductDetail = () => {
               </div>
             </TabsContent>
 
-            {/* Foto a video Tab */}
-            <TabsContent value="media" className="mt-6">
-              <div className="rounded-xl border border-border bg-card p-6">
-                <h3 className="mb-4 font-display text-lg font-semibold text-foreground">Photos</h3>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                  {allImages.map((img, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setSelectedImage(i); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                      className="group overflow-hidden rounded-lg border border-border transition-all hover:border-primary hover:shadow-lg"
-                    >
-                      <img src={img} alt={`${product.name} - photo ${i + 1}`} className="aspect-square w-full object-cover transition-transform group-hover:scale-105" />
-                    </button>
-                  ))}
-                </div>
-
-                <h3 className="mb-4 mt-8 font-display text-lg font-semibold text-foreground">Videos</h3>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {/* Placeholder video cards */}
-                  {[
-                    { title: "Product Overview", duration: "2:45" },
-                    { title: "Installation Guide", duration: "5:12" },
-                  ].map((video, i) => (
-                    <div key={i} className="group relative overflow-hidden rounded-lg border border-border bg-muted/30">
-                      <div className="relative aspect-video w-full">
-                        <img src={product.image} alt={video.title} className="h-full w-full object-cover opacity-70" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform group-hover:scale-110">
-                            <Play className="h-6 w-6 ml-0.5" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-3">
-                        <p className="text-sm font-medium text-foreground">{video.title}</p>
-                        <p className="text-xs text-muted-foreground">{video.duration}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
             <TabsContent value="reviews" className="mt-6">
               <div className="rounded-xl border border-border bg-card p-6">
                 <div className="mb-6 flex items-center gap-4">
                   <div className="text-center">
-                    <p className="font-display text-4xl font-bold text-foreground">{product.rating}</p>
+                    <p className="font-display text-4xl font-bold text-foreground">{product.rating ?? 0}</p>
                     <div className="mt-1 flex items-center gap-0.5">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`h-4 w-4 ${i < Math.floor(product.rating) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
+                        <Star key={i} className={`h-4 w-4 ${i < Math.floor(product.rating ?? 0) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
                       ))}
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{product.reviews} reviews</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{product.reviews_count ?? 0} reviews</p>
                   </div>
                 </div>
                 {[
                   { author: "John D.", date: "2 weeks ago", rating: 5, text: "Excellent product! Works exactly as described. Very reliable and easy to use." },
                   { author: "Sarah M.", date: "1 month ago", rating: 4, text: "Great value for the price. Solid build quality and performs well. Would recommend." },
-                  { author: "Mike R.", date: "2 months ago", rating: 5, text: "Been using this for a few months now. No issues whatsoever. Top quality from the brand." },
+                  { author: "Mike R.", date: "2 months ago", rating: 5, text: "Been using this for a few months now. No issues whatsoever. Top quality." },
                 ].map((review, i) => (
                   <div key={i} className={`py-4 ${i > 0 ? "border-t border-border" : ""}`}>
                     <div className="mb-2 flex items-center justify-between">
@@ -356,8 +331,7 @@ const ProductDetail = () => {
             </TabsContent>
           </Tabs>
 
-          {/* You May Also Like */}
-          <SuggestedProducts category={product.category} />
+          <SuggestedProducts categoryId={product.category_id} currentId={product.id} />
         </div>
       </main>
       <Footer />
