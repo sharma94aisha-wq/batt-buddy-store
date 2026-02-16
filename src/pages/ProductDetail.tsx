@@ -1,13 +1,43 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import ProductCard from "@/components/ProductCard";
 import { products } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play } from "lucide-react";
+import type { ProductCategory } from "@/data/products";
+
+const SuggestedProducts = ({ category }: { category: ProductCategory }) => {
+  const suggested = useMemo(() => {
+    const others = products.filter((p) => p.category !== category);
+    return [...others].sort(() => Math.random() - 0.5).slice(0, 5);
+  }, [category]);
+
+  return (
+    <section className="mt-16">
+      <h2 className="mb-6 font-display text-2xl font-bold text-foreground">You May Also Like</h2>
+      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+        {suggested.map((p) => (
+          <ProductCard
+            key={p.id}
+            id={p.id}
+            image={p.image}
+            name={p.name}
+            price={p.price}
+            originalPrice={p.originalPrice}
+            rating={p.rating}
+            reviews={p.reviews}
+            badge={p.badge}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -263,6 +293,9 @@ const ProductDetail = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* You May Also Like */}
+          <SuggestedProducts category={product.category} />
         </div>
       </main>
       <Footer />
