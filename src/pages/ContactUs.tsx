@@ -10,7 +10,7 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react";
 const ContactUs = () => (
   <div className="min-h-screen bg-background">
     <Header />
-    <main className="py-12">
+    <main className="pt-24 pb-12">
       <div className="container mx-auto px-4">
         <PageBreadcrumb items={[{ label: "Contact Us" }]} />
         <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Contact Us</h1>

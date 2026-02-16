@@ -44,7 +44,7 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="py-8">
+      <main className="pt-24 pb-8">
         <div className="container mx-auto px-4">
           <PageBreadcrumb items={[
             { label: categoryLabel, href: `/category/${product.category}` },
