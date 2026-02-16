@@ -41,6 +41,21 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Extract user ID from auth header if present
+    let userId: string | null = null;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      const anonClient = createClient(
+        Deno.env.get("SUPABASE_URL")!,
+        Deno.env.get("SUPABASE_ANON_KEY")!,
+        { global: { headers: { Authorization: authHeader } } }
+      );
+      const { data } = await anonClient.auth.getUser();
+      if (data?.user) {
+        userId = data.user.id;
+      }
+    }
+
     const {
       items,
       promoCode,
@@ -220,6 +235,7 @@ Deno.serve(async (req) => {
         tax,
         total: orderTotal,
         status: "pending",
+        user_id: userId,
       })
       .select("id")
       .single();
