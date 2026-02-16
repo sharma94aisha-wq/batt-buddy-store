@@ -156,13 +156,25 @@ const Checkout = () => {
 
                 <div className="space-y-4 mb-6">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-3">
-                      <img src={item.image} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium line-clamp-2">{item.name}</p>
-                        <p className="text-muted-foreground text-sm">Qty: {item.quantity}</p>
+                    <div key={item.id} className="space-y-2">
+                      <div className="flex gap-3">
+                        <img src={item.image} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium line-clamp-2">{item.name}</p>
+                          <p className="text-muted-foreground text-sm">Qty: {item.quantity}</p>
+                        </div>
+                        <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
                       </div>
-                      <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                      {item.addons && item.addons.length > 0 && (
+                        <div className="ml-8 space-y-1">
+                          {item.addons.map((addon) => (
+                            <div key={addon.id} className="flex items-center justify-between text-sm text-muted-foreground">
+                              <span>↳ {addon.label}</span>
+                              <span className="text-foreground">${(addon.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
