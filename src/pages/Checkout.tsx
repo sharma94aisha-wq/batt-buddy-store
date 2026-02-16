@@ -23,9 +23,9 @@ const Checkout = () => {
   const [selectedPoint, setSelectedPoint] = useState<PacketaPoint | null>(null);
 
   const [formData, setFormData] = useState({
-    email: "", firstName: "", lastName: "", address: "",
-    city: "", state: "", zipCode: "", cardNumber: "",
-    expiryDate: "", cvv: "",
+    firstName: "", lastName: "", phone: "", email: "",
+    address: "", city: "", zipCode: "",
+    cardNumber: "", expiryDate: "", cvv: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,20 +91,6 @@ const Checkout = () => {
               {/* Contact Information */}
               <div className="bg-card rounded-xl p-6 border border-border">
                 <h2 className="font-display text-xl mb-4">Contact Information</h2>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" required value={formData.email} onChange={handleInputChange} placeholder="your@email.com" className="mt-1" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Shipping Address */}
-              <div className="bg-card rounded-xl p-6 border border-border">
-                <div className="flex items-center gap-2 mb-4">
-                  <Truck className="h-5 w-5 text-primary" />
-                  <h2 className="font-display text-xl">Shipping Address</h2>
-                </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>
@@ -114,23 +100,13 @@ const Checkout = () => {
                     <Label htmlFor="lastName">Last Name</Label>
                     <Input id="lastName" name="lastName" required value={formData.lastName} onChange={handleInputChange} className="mt-1" />
                   </div>
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="address">Address</Label>
-                    <Input id="address" name="address" required value={formData.address} onChange={handleInputChange} className="mt-1" />
+                  <div>
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleInputChange} placeholder="+421" className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="city">City</Label>
-                    <Input id="city" name="city" required value={formData.city} onChange={handleInputChange} className="mt-1" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="state">State</Label>
-                      <Input id="state" name="state" required value={formData.state} onChange={handleInputChange} className="mt-1" />
-                    </div>
-                    <div>
-                      <Label htmlFor="zipCode">ZIP Code</Label>
-                      <Input id="zipCode" name="zipCode" required value={formData.zipCode} onChange={handleInputChange} className="mt-1" />
-                    </div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" name="email" type="email" required value={formData.email} onChange={handleInputChange} placeholder="your@email.com" className="mt-1" />
                   </div>
                 </div>
               </div>
@@ -147,6 +123,26 @@ const Checkout = () => {
                   selectedPoint={selectedPoint}
                   onPointSelected={setSelectedPoint}
                 />
+
+                {/* Home delivery address fields */}
+                {deliveryMethod === "home" && (
+                  <div className="mt-4 pt-4 border-t border-border space-y-4">
+                    <div>
+                      <Label htmlFor="address">Street and House Number</Label>
+                      <Input id="address" name="address" required value={formData.address} onChange={handleInputChange} className="mt-1" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="city">City</Label>
+                        <Input id="city" name="city" required value={formData.city} onChange={handleInputChange} className="mt-1" />
+                      </div>
+                      <div>
+                        <Label htmlFor="zipCode">ZIP Code</Label>
+                        <Input id="zipCode" name="zipCode" required value={formData.zipCode} onChange={handleInputChange} className="mt-1" />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="bg-card rounded-xl p-6 border border-border">
