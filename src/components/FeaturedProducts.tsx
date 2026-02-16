@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
 import { supabase } from "@/integrations/supabase/client";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DBProduct {
   id: string;
@@ -19,10 +20,14 @@ interface DBProduct {
 
 type FilterCategory = "all" | string;
 
+const MOBILE_LIMIT = 3;
+
 const FeaturedProducts = () => {
   const [activeCategory, setActiveCategory] = useState<FilterCategory>("all");
   const [products, setProducts] = useState<DBProduct[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
+  const [showAll, setShowAll] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,9 +41,18 @@ const FeaturedProducts = () => {
     fetchData();
   }, []);
 
+  // Reset showAll when category changes
+  useEffect(() => {
+    setShowAll(false);
+  }, [activeCategory]);
+
   const filteredProducts = activeCategory === "all"
     ? products
     : products.filter((p) => p.category_id === activeCategory);
+
+  const visibleProducts = isMobile && !showAll
+    ? filteredProducts.slice(0, MOBILE_LIMIT)
+    : filteredProducts;
 
   const filterOptions = [
     { value: "all", label: "Všetky produkty" },
@@ -74,7 +88,7 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {filteredProducts.map((product) => (
+          {visibleProducts.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}
@@ -90,6 +104,17 @@ const FeaturedProducts = () => {
             />
           ))}
         </div>
+
+        {isMobile && !showAll && filteredProducts.length > MOBILE_LIMIT && (
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={() => setShowAll(true)}
+              className="rounded-lg border border-primary bg-transparent px-8 py-3 text-sm font-medium text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
+            >
+              Zobraziť viac ({filteredProducts.length - MOBILE_LIMIT})
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
