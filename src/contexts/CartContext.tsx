@@ -9,6 +9,18 @@ export interface CartItem {
   quantity: number;
 }
 
+interface PromoCode {
+  code: string;
+  discount: number; // percentage
+  label: string;
+}
+
+const VALID_PROMOS: PromoCode[] = [
+  { code: "SAVE10", discount: 10, label: "10% off" },
+  { code: "SAVE20", discount: 20, label: "20% off" },
+  { code: "WELCOME", discount: 15, label: "15% off" },
+];
+
 interface CartContextType {
   items: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
@@ -19,6 +31,11 @@ interface CartContextType {
   totalPrice: number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
+  promoCode: PromoCode | null;
+  applyPromoCode: (code: string) => boolean;
+  removePromoCode: () => void;
+  discountAmount: number;
+  finalPrice: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -26,6 +43,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [promoCode, setPromoCode] = useState<PromoCode | null>(null);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
@@ -59,7 +77,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clearCart = () => {
     setItems([]);
+    setPromoCode(null);
     toast.info("Cart cleared");
+  };
+
+  const applyPromoCode = (code: string): boolean => {
+    const found = VALID_PROMOS.find(
+      (p) => p.code.toLowerCase() === code.trim().toLowerCase()
+    );
+    if (found) {
+      setPromoCode(found);
+      toast.success(`Promo code "${found.code}" applied — ${found.label}!`);
+      return true;
+    }
+    toast.error("Invalid promo code");
+    return false;
+  };
+
+  const removePromoCode = () => {
+    setPromoCode(null);
+    toast.info("Promo code removed");
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -67,6 +104,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  const discountAmount = promoCode ? totalPrice * (promoCode.discount / 100) : 0;
+  const finalPrice = totalPrice - discountAmount;
 
   return (
     <CartContext.Provider
@@ -80,6 +119,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         totalPrice,
         isCartOpen,
         setIsCartOpen,
+        promoCode,
+        applyPromoCode,
+        removePromoCode,
+        discountAmount,
+        finalPrice,
       }}
     >
       {children}
