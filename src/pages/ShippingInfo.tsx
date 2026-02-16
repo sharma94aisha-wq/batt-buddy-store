@@ -4,10 +4,10 @@ import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Truck, Clock, Globe, Package } from "lucide-react";
 
 const cards = [
-  { icon: Truck, title: "Standard Shipping", desc: "3–5 business days. Free on orders over $50." },
-  { icon: Clock, title: "Express Shipping", desc: "1–2 business days. Flat rate $12.99." },
-  { icon: Globe, title: "Coverage", desc: "We ship to all 50 US states and Canada." },
-  { icon: Package, title: "Order Tracking", desc: "Tracking number emailed once your order ships." },
+  { icon: Truck, title: "Štandardné doručenie", desc: "3–5 pracovných dní. Zadarmo pri objednávke nad 40 €." },
+  { icon: Clock, title: "Expresné doručenie", desc: "1–2 pracovné dni. Paušálna sadzba 12,99 €." },
+  { icon: Globe, title: "Pokrytie", desc: "Doručujeme na celé Slovensko a do Českej republiky." },
+  { icon: Package, title: "Sledovanie objednávky", desc: "Sledovacie číslo vám zašleme e-mailom po odoslaní objednávky." },
 ];
 
 const ShippingInfo = () => (
@@ -15,9 +15,9 @@ const ShippingInfo = () => (
     <Header />
     <main className="pt-24 pb-12">
       <div className="container mx-auto max-w-3xl px-4">
-        <PageBreadcrumb items={[{ label: "Shipping Information" }]} />
-        <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Shipping Information</h1>
-        <p className="mt-2 text-muted-foreground">Everything you need to know about our shipping options and policies.</p>
+        <PageBreadcrumb items={[{ label: "Informácie o doručení" }]} />
+        <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Informácie o doručení</h1>
+        <p className="mt-2 text-muted-foreground">Všetko, čo potrebujete vedieť o našich možnostiach a podmienkach doručenia.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {cards.map(({ icon: Icon, title, desc }) => (
             <div key={title} className="rounded-xl border border-border bg-card p-6">
@@ -28,10 +28,10 @@ const ShippingInfo = () => (
           ))}
         </div>
         <div className="mt-8 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground space-y-3">
-          <h2 className="font-display text-lg font-semibold text-foreground">Shipping Policy Details</h2>
-          <p>Orders placed before 2 PM EST on business days are processed the same day. Orders placed after 2 PM EST or on weekends will be processed the next business day.</p>
-          <p>Shipping times are estimates and may vary due to carrier delays, weather, or high-demand periods. VoltCharge is not responsible for delays once the package is handed to the carrier.</p>
-          <p>If your order arrives damaged, please contact us within 48 hours with photos so we can arrange a replacement.</p>
+          <h2 className="font-display text-lg font-semibold text-foreground">Podrobnosti o doručení</h2>
+          <p>Objednávky zadané pred 14:00 v pracovné dni sú spracované v ten istý deň. Objednávky zadané po 14:00 alebo cez víkend budú spracované nasledujúci pracovný deň.</p>
+          <p>Doby doručenia sú odhady a môžu sa líšiť v dôsledku oneskorení prepravcu, počasia alebo obdobia vysokého dopytu. VoltCharge nezodpovedá za oneskorenia po odovzdaní balíka prepravcovi.</p>
+          <p>Ak vaša objednávka dorazí poškodená, kontaktujte nás do 48 hodín s fotografiami, aby sme mohli zabezpečiť výmenu.</p>
         </div>
       </div>
     </main>

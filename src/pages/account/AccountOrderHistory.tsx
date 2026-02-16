@@ -70,19 +70,19 @@ const AccountOrderHistory = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">Order Archive</h1>
-        <p className="text-sm text-muted-foreground">Your past delivered orders</p>
+        <h1 className="font-display text-2xl font-bold">Archív objednávok</h1>
+        <p className="text-sm text-muted-foreground">Vaše predchádzajúce doručené objednávky</p>
       </div>
 
       {orders.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <Archive className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-          <h2 className="font-display text-lg font-semibold">No past orders</h2>
+          <h2 className="font-display text-lg font-semibold">Žiadne predchádzajúce objednávky</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Completed orders will appear here.
+            Dokončené objednávky sa zobrazia tu.
           </p>
           <Link to="/">
-            <Button variant="electric" className="mt-4">Start Shopping</Button>
+            <Button variant="electric" className="mt-4">Začať nakupovať</Button>
           </Link>
         </div>
       ) : (
@@ -96,7 +96,7 @@ const AccountOrderHistory = () => {
                 <div>
                   <p className="font-display font-bold">{order.order_number}</p>
                   <p className="text-sm text-muted-foreground">
-                    {new Date(order.created_at).toLocaleDateString("en-US", {
+                    {new Date(order.created_at).toLocaleDateString("sk-SK", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -125,15 +125,15 @@ const AccountOrderHistory = () => {
                         />
                         <div className="flex-1">
                           <p className="text-sm font-medium">{item.product_name}</p>
-                          <p className="text-xs text-muted-foreground">Qty: {item.quantity}</p>
+                          <p className="text-xs text-muted-foreground">Ks: {item.quantity}</p>
                         </div>
                         <p className="text-sm font-medium">€{(item.price * item.quantity).toFixed(2)}</p>
                       </div>
                     ))}
                   </div>
                   <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-sm text-muted-foreground">
-                    <span>Delivery: {order.delivery_method === "pickup" ? "Pickup" : "Home"}</span>
-                    <span>Payment: {order.payment_method === "cod" ? "Cash on Delivery" : order.payment_method === "bank" ? "Bank Transfer" : "Card"}</span>
+                    <span>Doručenie: {order.delivery_method === "pickup" ? "Odberné miesto" : "Domov"}</span>
+                    <span>Platba: {order.payment_method === "cod" ? "Dobierka" : order.payment_method === "bank" ? "Bankový prevod" : "Karta"}</span>
                   </div>
                 </div>
               )}

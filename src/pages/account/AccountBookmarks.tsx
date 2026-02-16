@@ -52,7 +52,7 @@ const AccountBookmarks = () => {
   const removeBookmark = async (bookmarkId: string) => {
     await supabase.from("bookmarks").delete().eq("id", bookmarkId);
     setBookmarks((prev) => prev.filter((b) => b.id !== bookmarkId));
-    toast.info("Bookmark removed");
+    toast.info("Záložka odstránená");
   };
 
   const handleAddToCart = (product: BookmarkedProduct["product"]) => {
@@ -78,19 +78,19 @@ const AccountBookmarks = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">My Bookmarks</h1>
-        <p className="text-sm text-muted-foreground">Products you've saved for later</p>
+        <h1 className="font-display text-2xl font-bold">Moje záložky</h1>
+        <p className="text-sm text-muted-foreground">Produkty, ktoré ste si uložili na neskôr</p>
       </div>
 
       {bookmarks.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <Bookmark className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
-          <h2 className="font-display text-lg font-semibold">No bookmarks yet</h2>
+          <h2 className="font-display text-lg font-semibold">Zatiaľ žiadne záložky</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Browse products and click the bookmark icon to save them here.
+            Prehliadajte produkty a kliknite na ikonu záložky pre ich uloženie.
           </p>
           <Link to="/">
-            <Button variant="electric" className="mt-4">Browse Products</Button>
+            <Button variant="electric" className="mt-4">Prehliadať produkty</Button>
           </Link>
         </div>
       ) : (
@@ -121,7 +121,7 @@ const AccountBookmarks = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="electric" size="sm" onClick={() => handleAddToCart(b.product)} className="gap-2">
-                  <ShoppingCart className="h-4 w-4" /> Add to Cart
+                  <ShoppingCart className="h-4 w-4" /> Do košíka
                 </Button>
                 <Button variant="ghost" size="icon" onClick={() => removeBookmark(b.id)} className="text-destructive hover:text-destructive">
                   <Trash2 className="h-4 w-4" />

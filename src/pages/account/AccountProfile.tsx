@@ -42,9 +42,9 @@ const AccountProfile = () => {
       .update({ display_name: displayName })
       .eq("user_id", user.id);
     if (error) {
-      toast.error("Failed to update profile");
+      toast.error("Nepodarilo sa aktualizovať profil");
     } else {
-      toast.success("Profile updated!");
+      toast.success("Profil aktualizovaný!");
     }
     setSaving(false);
   };
@@ -59,8 +59,8 @@ const AccountProfile = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-bold">My Profile</h1>
-        <p className="text-sm text-muted-foreground">Manage your account information</p>
+        <h1 className="font-display text-2xl font-bold">Môj profil</h1>
+        <p className="text-sm text-muted-foreground">Spravujte informácie o svojom účte</p>
       </div>
 
       <div className="rounded-xl border border-border bg-card p-6">
@@ -69,29 +69,29 @@ const AccountProfile = () => {
             <User className="h-8 w-8 text-primary" />
           </div>
           <div>
-            <p className="font-medium">{displayName || "No name set"}</p>
+            <p className="font-medium">{displayName || "Meno nie je nastavené"}</p>
             <p className="text-sm text-muted-foreground">{email}</p>
           </div>
         </div>
 
         <div className="space-y-4">
           <div>
-            <Label htmlFor="displayName">Display Name</Label>
+            <Label htmlFor="displayName">Zobrazované meno</Label>
             <Input
               id="displayName"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="Your name"
+              placeholder="Vaše meno"
               className="mt-1"
             />
           </div>
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">E-mail</Label>
             <Input id="email" value={email} disabled className="mt-1 opacity-60" />
-            <p className="mt-1 text-xs text-muted-foreground">Email cannot be changed here</p>
+            <p className="mt-1 text-xs text-muted-foreground">E-mail nie je možné zmeniť tu</p>
           </div>
           <Button variant="electric" onClick={handleSave} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? "Ukladám..." : "Uložiť zmeny"}
           </Button>
         </div>
       </div>

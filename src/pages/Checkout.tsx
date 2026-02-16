@@ -38,7 +38,7 @@ const Checkout = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (deliveryMethod === "pickup" && !selectedPoint) {
-      toast.error("Please select a pickup point");
+      toast.error("Prosím vyberte odberné miesto");
       return;
     }
     setIsProcessing(true);
@@ -71,14 +71,14 @@ const Checkout = () => {
         },
       });
 
-      if (error) throw new Error(error.message || "Failed to place order");
+      if (error) throw new Error(error.message || "Nepodarilo sa vytvoriť objednávku");
       if (data?.error) throw new Error(data.error);
 
       clearCart();
-      toast.success("Order placed successfully!");
+      toast.success("Objednávka bola úspešne vytvorená!");
       navigate("/order-confirmation");
     } catch (err: any) {
-      toast.error(err.message || "Failed to place order");
+      toast.error(err.message || "Nepodarilo sa vytvoriť objednávku");
     } finally {
       setIsProcessing(false);
     }
@@ -95,8 +95,8 @@ const Checkout = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
-          <h1 className="font-display text-2xl">Your cart is empty</h1>
-          <Button variant="electric" onClick={() => navigate("/")}>Continue Shopping</Button>
+          <h1 className="font-display text-2xl">Váš košík je prázdny</h1>
+          <Button variant="electric" onClick={() => navigate("/")}>Pokračovať v nákupe</Button>
         </div>
       </div>
     );
@@ -114,46 +114,43 @@ const Checkout = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
-            <ArrowLeft className="h-4 w-4" /> Back to Shop
+            <ArrowLeft className="h-4 w-4" /> Späť do obchodu
           </Button>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <h1 className="font-display text-3xl md:text-4xl mb-8">Checkout</h1>
+        <h1 className="font-display text-3xl md:text-4xl mb-8">Objednávka</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Form Section */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Contact Information */}
               <div className="bg-card rounded-xl p-6 border border-border">
-                <h2 className="font-display text-xl mb-4">Contact Information</h2>
+                <h2 className="font-display text-xl mb-4">Kontaktné údaje</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName">Meno</Label>
                     <Input id="firstName" name="firstName" required value={formData.firstName} onChange={handleInputChange} className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName">Priezvisko</Label>
                     <Input id="lastName" name="lastName" required value={formData.lastName} onChange={handleInputChange} className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">Telefónne číslo</Label>
                     <Input id="phone" name="phone" type="tel" required value={formData.phone} onChange={handleInputChange} placeholder="+421" className="mt-1" />
                   </div>
                   <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" required value={formData.email} onChange={handleInputChange} placeholder="your@email.com" className="mt-1" />
+                    <Label htmlFor="email">E-mail</Label>
+                    <Input id="email" name="email" type="email" required value={formData.email} onChange={handleInputChange} placeholder="vas@email.com" className="mt-1" />
                   </div>
                 </div>
               </div>
 
-              {/* Delivery Method */}
               <div className="bg-card rounded-xl p-6 border border-border">
                 <div className="flex items-center gap-2 mb-4">
                   <Truck className="h-5 w-5 text-primary" />
-                  <h2 className="font-display text-xl">Delivery Method</h2>
+                  <h2 className="font-display text-xl">Spôsob doručenia</h2>
                 </div>
                 <DeliveryMethodSelector
                   value={deliveryMethod}
@@ -163,20 +160,19 @@ const Checkout = () => {
                   currentTotal={finalPrice}
                 />
 
-                {/* Home delivery address fields */}
                 {deliveryMethod === "home" && (
                   <div className="mt-4 pt-4 border-t border-border space-y-4">
                     <div>
-                      <Label htmlFor="address">Street and House Number</Label>
+                      <Label htmlFor="address">Ulica a číslo domu</Label>
                       <Input id="address" name="address" required value={formData.address} onChange={handleInputChange} className="mt-1" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="city">City</Label>
+                        <Label htmlFor="city">Mesto</Label>
                         <Input id="city" name="city" required value={formData.city} onChange={handleInputChange} className="mt-1" />
                       </div>
                       <div>
-                        <Label htmlFor="zipCode">ZIP Code</Label>
+                        <Label htmlFor="zipCode">PSČ</Label>
                         <Input id="zipCode" name="zipCode" required value={formData.zipCode} onChange={handleInputChange} className="mt-1" />
                       </div>
                     </div>
@@ -187,31 +183,31 @@ const Checkout = () => {
               <div className="bg-card rounded-xl p-6 border border-border">
                 <div className="flex items-center gap-2 mb-4">
                   <CreditCard className="h-5 w-5 text-primary" />
-                  <h2 className="font-display text-xl">Payment Method</h2>
+                  <h2 className="font-display text-xl">Spôsob platby</h2>
                 </div>
                 <RadioGroup value={paymentMethod} onValueChange={(v) => setPaymentMethod(v as "card" | "cod" | "bank")} className="space-y-3">
                   <label htmlFor="pm-card" className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${paymentMethod === "card" ? "border-primary bg-primary/5" : "border-border"}`}>
                     <RadioGroupItem value="card" id="pm-card" />
                     <CreditCard className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Credit / Debit Card</p>
-                      <p className="text-xs text-muted-foreground">Pay securely with your card</p>
+                      <p className="text-sm font-medium">Kreditná / debetná karta</p>
+                      <p className="text-xs text-muted-foreground">Bezpečná platba kartou</p>
                     </div>
                   </label>
                   <label htmlFor="pm-cod" className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${paymentMethod === "cod" ? "border-primary bg-primary/5" : "border-border"}`}>
                     <RadioGroupItem value="cod" id="pm-cod" />
                     <Banknote className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Cash on Delivery</p>
-                      <p className="text-xs text-muted-foreground">Pay when you receive your order (+€1.00 fee)</p>
+                      <p className="text-sm font-medium">Dobierka</p>
+                      <p className="text-xs text-muted-foreground">Platba pri prevzatí objednávky (+€1,00 poplatok)</p>
                     </div>
                   </label>
                   <label htmlFor="pm-bank" className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${paymentMethod === "bank" ? "border-primary bg-primary/5" : "border-border"}`}>
                     <RadioGroupItem value="bank" id="pm-bank" />
                     <Building2 className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium">Bank Transfer</p>
-                      <p className="text-xs text-muted-foreground">Pay via bank details after placing order</p>
+                      <p className="text-sm font-medium">Bankový prevod</p>
+                      <p className="text-xs text-muted-foreground">Platba na bankový účet po vytvorení objednávky</p>
                     </div>
                   </label>
                 </RadioGroup>
@@ -219,13 +215,13 @@ const Checkout = () => {
                 {paymentMethod === "card" && (
                   <div className="space-y-4 mt-4 pt-4 border-t border-border">
                     <div>
-                      <Label htmlFor="cardNumber">Card Number</Label>
+                      <Label htmlFor="cardNumber">Číslo karty</Label>
                       <Input id="cardNumber" name="cardNumber" required value={formData.cardNumber} onChange={handleInputChange} placeholder="1234 5678 9012 3456" className="mt-1" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="expiryDate">Expiry Date</Label>
-                        <Input id="expiryDate" name="expiryDate" required value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/YY" className="mt-1" />
+                        <Label htmlFor="expiryDate">Platnosť do</Label>
+                        <Input id="expiryDate" name="expiryDate" required value={formData.expiryDate} onChange={handleInputChange} placeholder="MM/RR" className="mt-1" />
                       </div>
                       <div>
                         <Label htmlFor="cvv">CVV</Label>
@@ -237,17 +233,16 @@ const Checkout = () => {
 
                 {paymentMethod === "bank" && (
                   <div className="mt-4 pt-4 border-t border-border rounded-lg bg-muted/50 p-4 space-y-1 text-sm">
-                    <p className="font-medium">Bank details will be sent to your email after placing the order.</p>
-                    <p className="text-muted-foreground">Please complete the transfer within 3 business days.</p>
+                    <p className="font-medium">Bankové údaje vám budú zaslané e-mailom po vytvorení objednávky.</p>
+                    <p className="text-muted-foreground">Platbu prosím vykonajte do 3 pracovných dní.</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-card rounded-xl p-6 border border-border sticky top-8">
-                <h2 className="font-display text-xl mb-4">Order Summary</h2>
+                <h2 className="font-display text-xl mb-4">Zhrnutie objednávky</h2>
 
                 <div className="space-y-4 mb-6">
                   {items.map((item) => (
@@ -256,7 +251,7 @@ const Checkout = () => {
                         <img src={item.image} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
                         <div className="flex-1">
                           <p className="text-sm font-medium line-clamp-2">{item.name}</p>
-                          <p className="text-muted-foreground text-sm">Qty: {item.quantity}</p>
+                          <p className="text-muted-foreground text-sm">Ks: {item.quantity}</p>
                         </div>
                         <div className="flex items-start gap-2">
                           <p className="font-medium">€{(item.price * item.quantity).toFixed(2)}</p>
@@ -284,12 +279,10 @@ const Checkout = () => {
                   ))}
                 </div>
 
-                {/* Free Shipping Progress */}
                 <div className="border-t border-border pt-4 mb-4">
                   <FreeShippingProgress currentTotal={finalPrice} deliveryMethod={deliveryMethod} />
                 </div>
 
-                {/* Promo Code */}
                 <div className="border-t border-border pt-4 mb-4">
                   {promoCode ? (
                     <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 px-3 py-2">
@@ -305,14 +298,14 @@ const Checkout = () => {
                   ) : (
                     <div className="flex gap-2">
                       <Input
-                        placeholder="Promo code"
+                        placeholder="Zľavový kód"
                         value={promoInput}
                         onChange={(e) => setPromoInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleApplyPromo())}
                         className="flex-1"
                       />
                       <Button type="button" variant="outline" onClick={handleApplyPromo} disabled={!promoInput.trim()}>
-                        Apply
+                        Použiť
                       </Button>
                     </div>
                   )}
@@ -320,43 +313,43 @@ const Checkout = () => {
 
                 <div className="border-t border-border pt-4 space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Subtotal</span>
+                    <span className="text-muted-foreground">Medzisúčet</span>
                     <span>€{totalPrice.toFixed(2)}</span>
                   </div>
                   {promoCode && (
                     <div className="flex justify-between text-sm text-green-500">
-                      <span>Discount ({promoCode.label})</span>
+                      <span>Zľava ({promoCode.label})</span>
                       <span>-€{discountAmount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      Shipping ({deliveryMethod === "pickup" ? "Pickup point" : "Home delivery"})
+                      Doprava ({deliveryMethod === "pickup" ? "Odberné miesto" : "Doručenie domov"})
                     </span>
-                    <span className={shipping === 0 ? "text-green-600" : ""}>{shipping === 0 ? "Free" : `€${shipping.toFixed(2)}`}</span>
+                    <span className={shipping === 0 ? "text-green-600" : ""}>{shipping === 0 ? "Zadarmo" : `€${shipping.toFixed(2)}`}</span>
                   </div>
                   {codFee > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Cash on Delivery fee</span>
+                      <span className="text-muted-foreground">Poplatok za dobierku</span>
                       <span>€{codFee.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Tax</span>
+                    <span className="text-muted-foreground">DPH</span>
                     <span>€{tax.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold pt-2 border-t border-border">
-                    <span>Total</span>
+                    <span>Celkom</span>
                     <span className="text-primary">€{orderTotal.toFixed(2)}</span>
                   </div>
                 </div>
 
                 <Button type="submit" variant="electric" size="lg" className="w-full mt-6" disabled={isProcessing}>
-                  {isProcessing ? "Processing..." : (<><Lock className="h-4 w-4" /> Place Order</>)}
+                  {isProcessing ? "Spracovávam..." : (<><Lock className="h-4 w-4" /> Objednať</>)}
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center mt-4">
-                  Your payment information is secure and encrypted
+                  Vaše platobné údaje sú bezpečné a šifrované
                 </p>
               </div>
             </div>

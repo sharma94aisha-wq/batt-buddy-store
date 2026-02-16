@@ -32,15 +32,15 @@ const CartDrawer = () => {
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
       <SheetContent className="w-full sm:max-w-md flex flex-col">
         <SheetHeader>
-          <SheetTitle className="font-display text-xl">Your Cart</SheetTitle>
+          <SheetTitle className="font-display text-xl">Váš košík</SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
             <ShoppingBag className="h-16 w-16 text-muted-foreground" />
-            <p className="text-muted-foreground">Your cart is empty</p>
+            <p className="text-muted-foreground">Váš košík je prázdny</p>
             <Button variant="electric" onClick={() => setIsCartOpen(false)}>
-              Continue Shopping
+              Pokračovať v nákupe
             </Button>
           </div>
         ) : (
@@ -93,7 +93,6 @@ const CartDrawer = () => {
 
             <div className="border-t border-border pt-4 space-y-4">
               <FreeShippingProgress currentTotal={finalPrice} />
-              {/* Promo Code */}
               {promoCode ? (
                 <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 px-3 py-2">
                   <div className="flex items-center gap-2">
@@ -108,43 +107,42 @@ const CartDrawer = () => {
               ) : (
                 <div className="flex gap-2">
                   <Input
-                    placeholder="Promo code"
+                    placeholder="Zľavový kód"
                     value={promoInput}
                     onChange={(e) => setPromoInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
                     className="flex-1"
                   />
                   <Button variant="outline" onClick={handleApplyPromo} disabled={!promoInput.trim()}>
-                    Apply
+                    Použiť
                   </Button>
                 </div>
               )}
 
-              {/* Totals */}
               <div className="space-y-1">
                 {promoCode && (
                   <>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="text-muted-foreground">Medzisúčet</span>
                       <span>€{totalPrice.toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm text-green-500">
-                      <span>Discount ({promoCode.label})</span>
+                      <span>Zľava ({promoCode.label})</span>
                       <span>-€{discountAmount.toFixed(2)}</span>
                     </div>
                   </>
                 )}
                 <div className="flex items-center justify-between text-lg font-bold">
-                  <span>Total</span>
+                  <span>Celkom</span>
                   <span className="text-primary">€{finalPrice.toFixed(2)}</span>
                 </div>
               </div>
 
               <Button variant="electric" className="w-full" size="lg" onClick={handleCheckout}>
-                Checkout
+                Objednať
               </Button>
               <Button variant="ghost" className="w-full" onClick={clearCart}>
-                Clear Cart
+                Vyprázdniť košík
               </Button>
             </div>
           </>

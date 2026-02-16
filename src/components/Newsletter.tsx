@@ -13,25 +13,25 @@ const Newsletter = () => {
           </div>
           
           <h2 className="mb-4 font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-            Stay Charged with Updates
+            Zostaňte v obraze
           </h2>
           <p className="mb-8 text-muted-foreground">
-            Subscribe to get exclusive deals, new product alerts, and expert tips delivered to your inbox.
+            Prihláste sa na odber a získajte exkluzívne ponuky, novinky o produktoch a odborné tipy priamo do vášho e-mailu.
           </p>
           
           <form className="flex flex-col gap-3 sm:flex-row sm:gap-4">
             <Input
               type="email"
-              placeholder="Enter your email"
+              placeholder="Zadajte váš e-mail"
               className="h-12 flex-1 border-border bg-card text-foreground placeholder:text-muted-foreground focus:border-primary"
             />
             <Button variant="electric" size="lg" className="h-12">
-              Subscribe
+              Odoberať
             </Button>
           </form>
           
           <p className="mt-4 text-xs text-muted-foreground">
-            By subscribing, you agree to our Privacy Policy. Unsubscribe anytime.
+            Prihlásením sa súhlasíte s našimi Zásadami ochrany osobných údajov. Odber môžete kedykoľvek zrušiť.
           </p>
         </div>
       </div>

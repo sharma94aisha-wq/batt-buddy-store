@@ -3,7 +3,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { MapPin, Home, Package } from "lucide-react";
 
-// Packeta widget types
 declare global {
   interface Window {
     Packeta?: {
@@ -91,10 +90,10 @@ const DeliveryMethodSelector = ({
           <div className="flex-1">
             <p className="text-sm font-medium">Packeta Z-BOX / Z-POINT</p>
             <p className="text-xs text-muted-foreground">
-              Pick up at a Packeta point near you
+              Vyzdvihnite si na odbernom mieste Packeta vo vašom okolí
             </p>
           </div>
-          <span className={`text-sm font-semibold ${freePickup ? "text-green-600" : ""}`}>{freePickup ? "Free" : "€2.00"}</span>
+          <span className={`text-sm font-semibold ${freePickup ? "text-green-600" : ""}`}>{freePickup ? "Zadarmo" : "€2,00"}</span>
         </label>
 
         {value === "pickup" && (
@@ -114,7 +113,7 @@ const DeliveryMethodSelector = ({
                   size="sm"
                   onClick={openPacketaWidget}
                 >
-                  Change
+                  Zmeniť
                 </Button>
               </div>
             ) : (
@@ -126,7 +125,7 @@ const DeliveryMethodSelector = ({
                 disabled={!widgetLoaded}
               >
                 <MapPin className="h-4 w-4" />
-                {widgetLoaded ? "Select Pickup Point" : "Loading map…"}
+                {widgetLoaded ? "Vybrať odberné miesto" : "Načítavam mapu…"}
               </Button>
             )}
           </div>
@@ -141,12 +140,12 @@ const DeliveryMethodSelector = ({
           <RadioGroupItem value="home" id="dm-home" />
           <Home className="h-5 w-5 text-muted-foreground" />
           <div className="flex-1">
-            <p className="text-sm font-medium">Packeta – Home Delivery</p>
+            <p className="text-sm font-medium">Packeta – Doručenie domov</p>
             <p className="text-xs text-muted-foreground">
-              Delivered to your address in Slovakia
+              Doručenie na vašu adresu na Slovensku
             </p>
           </div>
-          <span className={`text-sm font-semibold ${freeHome ? "text-green-600" : ""}`}>{freeHome ? "Free" : "€6.00"}</span>
+          <span className={`text-sm font-semibold ${freeHome ? "text-green-600" : ""}`}>{freeHome ? "Zadarmo" : "€6,00"}</span>
         </label>
       </RadioGroup>
     </div>

@@ -21,7 +21,6 @@ const FreeShippingProgress = ({ currentTotal, deliveryMethod = "pickup" }: FreeS
   const qualified = deliveryMethod === "home" ? homeQualified : pickupQualified;
   const progress = Math.min(100, (currentTotal / activeThreshold) * 100);
 
-  // For pickup: also show home delivery milestone if not yet reached
   const showHomeMilestone = deliveryMethod === "pickup" && pickupQualified && !homeQualified;
 
   return (
@@ -31,12 +30,12 @@ const FreeShippingProgress = ({ currentTotal, deliveryMethod = "pickup" }: FreeS
           <Package className={`h-4 w-4 ${qualified ? "text-green-500" : "text-primary"}`} />
           {qualified ? (
             <span className="text-sm font-medium text-green-500">
-              {deliveryMethod === "home" ? "Free home delivery unlocked! 🎉" : "Free delivery to Z-BOX / Z-POINT unlocked! 🎉"}
+              {deliveryMethod === "home" ? "Doručenie domov zadarmo odomknuté! 🎉" : "Doručenie do Z-BOXu / Z-POINTu zadarmo odomknuté! 🎉"}
             </span>
           ) : (
             <span className="text-sm text-muted-foreground">
-              Add <span className="font-semibold text-foreground">€{remaining.toFixed(2)}</span> more for free{" "}
-              {deliveryMethod === "home" ? "home delivery" : "delivery to Z-BOX / Z-POINT"}
+              Pridajte ešte <span className="font-semibold text-foreground">€{remaining.toFixed(2)}</span> pre bezplatné{" "}
+              {deliveryMethod === "home" ? "doručenie domov" : "doručenie do Z-BOXu / Z-POINTu"}
             </span>
           )}
         </div>
@@ -46,7 +45,7 @@ const FreeShippingProgress = ({ currentTotal, deliveryMethod = "pickup" }: FreeS
             <div
               className="absolute top-0 h-2 w-0.5 bg-muted-foreground/40"
               style={{ left: `${Math.min(100, (FREE_PICKUP_THRESHOLD / FREE_HOME_THRESHOLD) * 100)}%` }}
-              title="Free pickup"
+              title="Bezplatný odber"
             />
           )}
         </div>
@@ -56,7 +55,7 @@ const FreeShippingProgress = ({ currentTotal, deliveryMethod = "pickup" }: FreeS
         <div className="flex items-center gap-2">
           <Home className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">
-            Add <span className="font-semibold text-foreground">€{homeRemaining.toFixed(2)}</span> more for free home delivery
+            Pridajte ešte <span className="font-semibold text-foreground">€{homeRemaining.toFixed(2)}</span> pre bezplatné doručenie domov
           </span>
         </div>
       )}

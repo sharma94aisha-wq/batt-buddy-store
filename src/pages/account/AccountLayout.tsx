@@ -13,10 +13,10 @@ const AccountLayout = () => {
   };
 
   const navItems = [
-    { to: "/account", icon: User, label: "My Profile", end: true },
-    { to: "/account/bookmarks", icon: Bookmark, label: "Bookmarks" },
-    { to: "/account/orders", icon: Package, label: "Current Orders" },
-    { to: "/account/order-history", icon: Archive, label: "Order Archive" },
+    { to: "/account", icon: User, label: "Môj profil", end: true },
+    { to: "/account/bookmarks", icon: Bookmark, label: "Záložky" },
+    { to: "/account/orders", icon: Package, label: "Aktuálne objednávky" },
+    { to: "/account/order-history", icon: Archive, label: "Archív objednávok" },
   ];
 
   return (
@@ -25,7 +25,7 @@ const AccountLayout = () => {
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="gap-2">
-              <ArrowLeft className="h-4 w-4" /> Back to Shop
+              <ArrowLeft className="h-4 w-4" /> Späť do obchodu
             </Button>
             <div className="hidden items-center gap-2 sm:flex">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -39,7 +39,7 @@ const AccountLayout = () => {
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-muted-foreground sm:block">{user?.email}</span>
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
-              <LogOut className="h-4 w-4" /> Sign Out
+              <LogOut className="h-4 w-4" /> Odhlásiť sa
             </Button>
           </div>
         </div>
@@ -47,7 +47,6 @@ const AccountLayout = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-[250px_1fr]">
-          {/* Sidebar */}
           <nav className="space-y-1">
             {navItems.map((item) => (
               <NavLink
@@ -68,7 +67,6 @@ const AccountLayout = () => {
             ))}
           </nav>
 
-          {/* Content */}
           <div>
             <Outlet />
           </div>
