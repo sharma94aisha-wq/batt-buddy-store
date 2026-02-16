@@ -31,12 +31,12 @@ const FreeShippingProgress = ({ currentTotal, deliveryMethod = "pickup" }: FreeS
           <Package className={`h-4 w-4 ${qualified ? "text-green-500" : "text-primary"}`} />
           {qualified ? (
             <span className="text-sm font-medium text-green-500">
-              {deliveryMethod === "home" ? "Free home delivery unlocked! 🎉" : "Free pickup delivery unlocked! 🎉"}
+              {deliveryMethod === "home" ? "Free home delivery unlocked! 🎉" : "Free delivery to Z-BOX / Z-POINT unlocked! 🎉"}
             </span>
           ) : (
             <span className="text-sm text-muted-foreground">
               Add <span className="font-semibold text-foreground">€{remaining.toFixed(2)}</span> more for free{" "}
-              {deliveryMethod === "home" ? "home delivery" : "pickup delivery"}
+              {deliveryMethod === "home" ? "home delivery" : "delivery to Z-BOX / Z-POINT"}
             </span>
           )}
         </div>
