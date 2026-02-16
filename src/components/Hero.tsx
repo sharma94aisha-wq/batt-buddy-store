@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield, Zap, Clock } from "lucide-react";
+import { ArrowRight, Shield, Zap, Truck } from "lucide-react";
 import heroImage from "@/assets/hero-charger.jpg";
 
 const Hero = () => {
@@ -44,29 +44,29 @@ const Hero = () => {
             <div className="grid grid-cols-3 gap-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+                  <Zap className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Same-Day</p>
+                  <p className="text-xs text-muted-foreground">Shipping</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
                   <Shield className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">2 Year</p>
+                  <p className="text-sm font-semibold text-foreground">365-Day</p>
                   <p className="text-xs text-muted-foreground">Warranty</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                  <Zap className="h-5 w-5 text-primary" />
+                  <Truck className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">Fast</p>
-                  <p className="text-xs text-muted-foreground">Charging</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                  <Clock className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">24/7</p>
-                  <p className="text-xs text-muted-foreground">Support</p>
+                  <p className="text-sm font-semibold text-foreground">Free</p>
+                  <p className="text-xs text-muted-foreground">Shipping</p>
                 </div>
               </div>
             </div>
