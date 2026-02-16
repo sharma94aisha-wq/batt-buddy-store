@@ -93,6 +93,41 @@ const DeliveryMethodSelector = ({
           <span className="text-sm font-semibold">€2.00</span>
         </label>
 
+        {value === "pickup" && (
+          <div className="ml-8 space-y-2">
+            {selectedPoint ? (
+              <div className="flex items-start gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3">
+                <MapPin className="h-4 w-4 text-primary mt-0.5" />
+                <div className="flex-1 text-sm">
+                  <p className="font-medium">{selectedPoint.name}</p>
+                  <p className="text-muted-foreground">
+                    {selectedPoint.street}, {selectedPoint.city} {selectedPoint.zip}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={openPacketaWidget}
+                >
+                  Change
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full gap-2"
+                onClick={openPacketaWidget}
+                disabled={!widgetLoaded}
+              >
+                <MapPin className="h-4 w-4" />
+                {widgetLoaded ? "Select Pickup Point" : "Loading map…"}
+              </Button>
+            )}
+          </div>
+        )}
+
         <label
           htmlFor="dm-home"
           className={`flex items-center gap-3 rounded-lg border p-4 cursor-pointer transition-colors ${
@@ -110,41 +145,6 @@ const DeliveryMethodSelector = ({
           <span className="text-sm font-semibold">€6.00</span>
         </label>
       </RadioGroup>
-
-      {value === "pickup" && (
-        <div className="ml-8 space-y-2">
-          {selectedPoint ? (
-            <div className="flex items-start gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3">
-              <MapPin className="h-4 w-4 text-primary mt-0.5" />
-              <div className="flex-1 text-sm">
-                <p className="font-medium">{selectedPoint.name}</p>
-                <p className="text-muted-foreground">
-                  {selectedPoint.street}, {selectedPoint.city} {selectedPoint.zip}
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={openPacketaWidget}
-              >
-                Change
-              </Button>
-            </div>
-          ) : (
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full gap-2"
-              onClick={openPacketaWidget}
-              disabled={!widgetLoaded}
-            >
-              <MapPin className="h-4 w-4" />
-              {widgetLoaded ? "Select Pickup Point" : "Loading map…"}
-            </Button>
-          )}
-        </div>
-      )}
     </div>
   );
 };
