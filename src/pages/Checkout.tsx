@@ -4,15 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
-import { ArrowLeft, CreditCard, Lock, Truck, Tag, X } from "lucide-react";
+import { ArrowLeft, CreditCard, Lock, Truck, Tag, X, Trash2 } from "lucide-react";
 import FreeShippingProgress from "@/components/FreeShippingProgress";
 import { toast } from "sonner";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const {
-    items, totalPrice, clearCart, promoCode, applyPromoCode,
-    removePromoCode, discountAmount, finalPrice,
+    items, totalPrice, clearCart, removeFromCart, removeAddon,
+    promoCode, applyPromoCode, removePromoCode, discountAmount, finalPrice,
   } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [promoInput, setPromoInput] = useState("");
@@ -163,14 +163,24 @@ const Checkout = () => {
                           <p className="text-sm font-medium line-clamp-2">{item.name}</p>
                           <p className="text-muted-foreground text-sm">Qty: {item.quantity}</p>
                         </div>
-                        <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                        <div className="flex items-start gap-2">
+                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                          <Button variant="ghost" size="icon" className="h-6 w-6 text-destructive hover:text-destructive" onClick={() => removeFromCart(item.id)}>
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                       {item.addons && item.addons.length > 0 && (
                         <div className="ml-8 space-y-1">
                           {item.addons.map((addon) => (
                             <div key={addon.id} className="flex items-center justify-between text-sm text-muted-foreground">
                               <span>↳ {addon.label}</span>
-                              <span className="text-foreground">${(addon.price * item.quantity).toFixed(2)}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-foreground">${(addon.price * item.quantity).toFixed(2)}</span>
+                                <Button variant="ghost" size="icon" className="h-5 w-5 text-destructive hover:text-destructive" onClick={() => removeAddon(item.id, addon.id)}>
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              </div>
                             </div>
                           ))}
                         </div>
