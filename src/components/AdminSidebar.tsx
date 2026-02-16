@@ -1,4 +1,4 @@
-import { Package, Grid3X3, FileText, Layout, LogOut, Home, ShoppingCart } from "lucide-react";
+import { Package, Grid3X3, FileText, Layout, LogOut, Home, ShoppingCart, MessageSquare } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 
 const items = [
   { title: "Orders", url: "/admin/orders", icon: ShoppingCart },
+  { title: "Messages", url: "/admin/messages", icon: MessageSquare },
   { title: "Products", url: "/admin/products", icon: Package },
   { title: "Categories", url: "/admin/categories", icon: Grid3X3 },
   { title: "Pages", url: "/admin/pages", icon: FileText },
