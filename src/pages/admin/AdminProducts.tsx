@@ -109,7 +109,7 @@ const AdminProducts = () => {
               {products.map((p) => (
                 <TableRow key={p.id}>
                   <TableCell className="font-medium">{p.name}</TableCell>
-                  <TableCell>${Number(p.price).toFixed(2)}</TableCell>
+                  <TableCell>€{Number(p.price).toFixed(2)}</TableCell>
                   <TableCell>{p.badge || "—"}</TableCell>
                   <TableCell>{p.is_active ? "✅" : "❌"}</TableCell>
                   <TableCell>

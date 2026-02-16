@@ -53,7 +53,7 @@ const CartDrawer = () => {
                       <img src={item.image} alt={item.name} className="h-20 w-20 rounded-md object-cover" />
                       <div className="flex flex-1 flex-col">
                         <h4 className="font-medium text-sm line-clamp-2">{item.name}</h4>
-                        <span className="text-primary font-bold">${item.price.toFixed(2)}</span>
+                        <span className="text-primary font-bold">€{item.price.toFixed(2)}</span>
                         <div className="mt-auto flex items-center gap-2">
                           <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                             <Minus className="h-3 w-3" />
@@ -77,7 +77,7 @@ const CartDrawer = () => {
                               <span>{addon.label}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="text-primary font-medium">${addon.price.toFixed(2)}</span>
+                              <span className="text-primary font-medium">€{addon.price.toFixed(2)}</span>
                               <Button variant="ghost" size="icon" className="h-5 w-5 text-destructive hover:text-destructive" onClick={() => removeAddon(item.id, addon.id)}>
                                 <X className="h-3 w-3" />
                               </Button>
@@ -126,17 +126,17 @@ const CartDrawer = () => {
                   <>
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">Subtotal</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>€{totalPrice.toFixed(2)}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm text-green-500">
                       <span>Discount ({promoCode.label})</span>
-                      <span>-${discountAmount.toFixed(2)}</span>
+                      <span>-€{discountAmount.toFixed(2)}</span>
                     </div>
                   </>
                 )}
                 <div className="flex items-center justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span className="text-primary">${finalPrice.toFixed(2)}</span>
+                  <span className="text-primary">€{finalPrice.toFixed(2)}</span>
                 </div>
               </div>
 
