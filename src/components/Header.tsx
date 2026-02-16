@@ -4,12 +4,23 @@ import { useState } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import CartDrawer from "@/components/CartDrawer";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { totalItems, setIsCartOpen } = useCart();
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleHashNav = (hash: string) => {
+    setIsMenuOpen(false);
+    if (location.pathname === "/") {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/#" + hash);
+    }
+  };
 
   return (
     <>
@@ -29,15 +40,15 @@ const Header = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden items-center gap-8 md:flex">
-              <a href="#products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              <button onClick={() => handleHashNav("products")} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 Produkty
-              </a>
-              <a href="#categories" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              </button>
+              <button onClick={() => handleHashNav("categories")} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 Kategórie
-              </a>
-              <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              </button>
+              <button onClick={() => handleHashNav("features")} className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 Prečo my
-              </a>
+              </button>
               <Link to="/contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 Kontakt
               </Link>
@@ -76,15 +87,15 @@ const Header = () => {
           {isMenuOpen && (
             <nav className="border-t border-border py-4 md:hidden">
               <div className="flex flex-col gap-4">
-                <a href="#products" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                <button onClick={() => handleHashNav("products")} className="text-left text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Produkty
-                </a>
-                <a href="#categories" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                </button>
+                <button onClick={() => handleHashNav("categories")} className="text-left text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Kategórie
-                </a>
-                <a href="#features" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+                </button>
+                <button onClick={() => handleHashNav("features")} className="text-left text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Prečo my
-                </a>
+                </button>
                 <Link to="/contact" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                   Kontakt
                 </Link>
