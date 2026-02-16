@@ -8,7 +8,9 @@ import { products } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play } from "lucide-react";
+import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { ProductCategory } from "@/data/products";
 
 const SuggestedProducts = ({ category }: { category: ProductCategory }) => {
@@ -46,6 +48,7 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   if (!product) {
     return (
@@ -65,6 +68,21 @@ const ProductDetail = () => {
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
+
+  const warranty1Price = Math.round(product.price * 0.3 * 100) / 100;
+  const warranty2Price = Math.round(product.price * 0.4 * 100) / 100;
+
+  const additionalServices = [
+    { id: "warranty-1", label: "Extended Warranty +1 Year", price: warranty1Price, tooltip: "Extend your manufacturer warranty by an additional year for complete peace of mind." },
+    { id: "warranty-2", label: "Extended Warranty +2 Years", price: warranty2Price, tooltip: "Extend your manufacturer warranty by two additional years for maximum protection." },
+    { id: "auto-surprise", label: "Auto Surprise", price: 1, tooltip: "Treat yourself to a small surprise that will be a pleasant bonus to your order." },
+  ];
+
+  const toggleService = (id: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
+  };
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -171,7 +189,41 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
-          </div>
+              </div>
+
+              {/* Additional Services */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Additional Services</h3>
+                <TooltipProvider delayDuration={200}>
+                  <div className="space-y-3">
+                    {additionalServices.map((service) => (
+                      <div key={service.id} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id={service.id}
+                            checked={selectedServices.includes(service.id)}
+                            onCheckedChange={() => toggleService(service.id)}
+                          />
+                          <label htmlFor={service.id} className="cursor-pointer text-sm text-foreground">
+                            {service.label}
+                          </label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button type="button" className="flex h-4 w-4 items-center justify-center rounded-full border border-muted-foreground/40 text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                                <span className="text-[10px] font-bold leading-none">!</span>
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-[220px] text-xs">
+                              {service.tooltip}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <span className="text-sm font-medium text-primary">+${service.price.toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </TooltipProvider>
+              </div>
 
           {/* Tabs */}
           <Tabs defaultValue="specs" className="mt-12">
