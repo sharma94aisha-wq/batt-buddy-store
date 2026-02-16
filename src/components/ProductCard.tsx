@@ -12,9 +12,10 @@ interface ProductCardProps {
   rating: number;
   reviews: number;
   badge?: string;
+  stockQuantity?: number;
 }
 
-const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, badge }: ProductCardProps) => {
+const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, badge, stockQuantity }: ProductCardProps) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
@@ -71,6 +72,19 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
           <span className="text-xs text-muted-foreground">({reviews})</span>
         </div>
         
+        {/* Stock */}
+        {stockQuantity !== undefined && (
+          <div className="mb-3">
+            <span className={`text-xs font-medium ${stockQuantity > 0 ? "text-green-500" : "text-destructive"}`}>
+              {stockQuantity === 0
+                ? "Out of stock"
+                : stockQuantity > 5
+                  ? "5+ in stock"
+                  : `${stockQuantity} in stock`}
+            </span>
+          </div>
+        )}
+
         {/* Price & Add to Cart */}
         <div className="mt-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -79,7 +93,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
               <span className="text-sm text-muted-foreground line-through">${originalPrice.toFixed(2)}</span>
             )}
           </div>
-          <Button variant="electric" size="icon" className="h-9 w-9 shrink-0" onClick={(e) => { e.preventDefault(); handleAddToCart(); }}>
+          <Button variant="electric" size="icon" className="h-9 w-9 shrink-0" onClick={(e) => { e.preventDefault(); handleAddToCart(); }} disabled={stockQuantity === 0}>
             <ShoppingCart className="h-4 w-4" />
           </Button>
         </div>

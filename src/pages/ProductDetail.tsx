@@ -32,6 +32,7 @@ const SuggestedProducts = ({ category }: { category: ProductCategory }) => {
             rating={p.rating}
             reviews={p.reviews}
             badge={p.badge}
+            stockQuantity={p.stockQuantity}
           />
         ))}
       </div>
@@ -138,8 +139,12 @@ const ProductDetail = () => {
               {/* SKU & Stock */}
               <div className="flex items-center gap-6 text-sm">
                 <span className="text-muted-foreground">SKU: <span className="text-foreground">{product.sku || `SKU-${product.id.toString().padStart(4, "0")}`}</span></span>
-                <span className={`font-medium ${product.inStock !== false ? "text-green-500" : "text-destructive"}`}>
-                  {product.inStock !== false ? "● In Stock" : "● Out of Stock"}
+                <span className={`font-medium ${(product.stockQuantity ?? 1) > 0 ? "text-green-500" : "text-destructive"}`}>
+                  {(product.stockQuantity ?? 1) === 0
+                    ? "● Out of Stock"
+                    : (product.stockQuantity ?? 1) > 5
+                      ? "● 5+ in stock"
+                      : `● ${product.stockQuantity} in stock`}
                 </span>
               </div>
               {/* Quantity & Add to Cart */}

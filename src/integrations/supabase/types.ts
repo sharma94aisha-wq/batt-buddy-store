@@ -99,6 +99,7 @@ export type Database = {
           reviews_count: number | null
           slug: string
           sort_order: number | null
+          stock_quantity: number
           updated_at: string
         }
         Insert: {
@@ -116,6 +117,7 @@ export type Database = {
           reviews_count?: number | null
           slug: string
           sort_order?: number | null
+          stock_quantity?: number
           updated_at?: string
         }
         Update: {
@@ -133,6 +135,7 @@ export type Database = {
           reviews_count?: number | null
           slug?: string
           sort_order?: number | null
+          stock_quantity?: number
           updated_at?: string
         }
         Relationships: [
