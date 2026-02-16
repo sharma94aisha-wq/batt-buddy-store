@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
-  id: number | string;
+  id: string;
+  slug: string;
   image: string;
   name: string;
   price: number;
@@ -20,7 +21,7 @@ interface ProductCardProps {
   stockQuantity?: number;
 }
 
-const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, badge, stockQuantity }: ProductCardProps) => {
+const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, reviews, badge, stockQuantity }: ProductCardProps) => {
   const { addToCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
         .from("bookmarks")
         .select("id")
         .eq("user_id", user.id)
-        .eq("product_id", String(id))
+        .eq("product_id", id)
         .maybeSingle()
         .then(({ data }) => {
           setIsBookmarked(!!data);
@@ -41,7 +42,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
   }, [user, id]);
 
   const handleAddToCart = () => {
-    addToCart({ id: typeof id === "string" ? parseInt(id.substring(0, 8), 16) : id, image, name, price });
+    addToCart({ id, image, name, price });
   };
 
   const toggleBookmark = async (e: React.MouseEvent) => {
@@ -52,18 +53,18 @@ const ProductCard = ({ id, image, name, price, originalPrice, rating, reviews, b
       return;
     }
     if (isBookmarked) {
-      await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("product_id", String(id));
+      await supabase.from("bookmarks").delete().eq("user_id", user.id).eq("product_id", id);
       setIsBookmarked(false);
       toast.info("Bookmark removed");
     } else {
-      await supabase.from("bookmarks").insert({ user_id: user.id, product_id: String(id) });
+      await supabase.from("bookmarks").insert({ user_id: user.id, product_id: id });
       setIsBookmarked(true);
       toast.success("Bookmarked!");
     }
   };
 
   return (
-    <Link to={`/product/${id}`} className="group relative block overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-glow">
+    <Link to={`/product/${slug}`} className="group relative block overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-glow">
       {/* Badge */}
       {badge && (
         <div className="absolute left-3 top-3 z-10 rounded-lg bg-primary px-3 py-1">

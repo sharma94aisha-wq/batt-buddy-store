@@ -57,7 +57,7 @@ const AccountBookmarks = () => {
 
   const handleAddToCart = (product: BookmarkedProduct["product"]) => {
     addToCart({
-      id: parseInt(product.id.substring(0, 8), 16),
+      id: product.id,
       image: product.image_url || "/placeholder.svg",
       name: product.name,
       price: product.price,
@@ -97,7 +97,7 @@ const AccountBookmarks = () => {
         <div className="space-y-3">
           {bookmarks.map((b) => (
             <div key={b.id} className="flex items-center gap-4 rounded-xl border border-border bg-card p-4">
-              <Link to={`/product/${b.product.id}`}>
+              <Link to={`/product/${b.product.slug}`}>
                 <img
                   src={b.product.image_url || "/placeholder.svg"}
                   alt={b.product.name}
@@ -105,7 +105,7 @@ const AccountBookmarks = () => {
                 />
               </Link>
               <div className="flex-1">
-                <Link to={`/product/${b.product.id}`} className="font-medium hover:text-primary">
+                <Link to={`/product/${b.product.slug}`} className="font-medium hover:text-primary">
                   {b.product.name}
                 </Link>
                 <div className="mt-1 flex items-center gap-2">

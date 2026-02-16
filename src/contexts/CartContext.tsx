@@ -8,7 +8,7 @@ export interface CartAddon {
 }
 
 export interface CartItem {
-  id: number;
+  id: string;
   image: string;
   name: string;
   price: number;
@@ -31,9 +31,9 @@ const VALID_PROMOS: PromoCode[] = [
 interface CartContextType {
   items: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  removeFromCart: (id: number) => void;
-  removeAddon: (itemId: number, addonId: string) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: string) => void;
+  removeAddon: (itemId: string, addonId: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -68,12 +68,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
     toast.info("Item removed from cart");
   };
 
-  const removeAddon = (itemId: number, addonId: string) => {
+  const removeAddon = (itemId: string, addonId: string) => {
     setItems((prev) =>
       prev.map((i) =>
         i.id === itemId
@@ -84,7 +84,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     toast.info("Add-on removed");
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: string, quantity: number) => {
     if (quantity < 1) {
       removeFromCart(id);
       return;

@@ -1,27 +1,53 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
-import { products, type ProductCategory } from "@/data/products";
+import { supabase } from "@/integrations/supabase/client";
 
-type FilterCategory = "all" | ProductCategory;
+interface DBProduct {
+  id: string;
+  slug: string;
+  name: string;
+  price: number;
+  original_price: number | null;
+  image_url: string | null;
+  rating: number | null;
+  reviews_count: number | null;
+  badge: string | null;
+  stock_quantity: number;
+  category_id: string | null;
+  is_active: boolean | null;
+}
 
-const categories: { value: FilterCategory; label: string }[] = [
-  { value: "all", label: "All Products" },
-  { value: "charger", label: "12/24V Car Battery Charger" },
-  { value: "jump-starter", label: "Jump Starter (Booster)" },
-  { value: "compressor", label: "Compressor" },
-];
+type FilterCategory = "all" | string;
 
 const FeaturedProducts = () => {
   const [activeCategory, setActiveCategory] = useState<FilterCategory>("all");
+  const [products, setProducts] = useState<DBProduct[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [prodRes, catRes] = await Promise.all([
+        supabase.from("products").select("*").eq("is_active", true).order("sort_order"),
+        supabase.from("categories").select("id, name, slug").order("sort_order"),
+      ]);
+      if (prodRes.data) setProducts(prodRes.data as unknown as DBProduct[]);
+      if (catRes.data) setCategories(catRes.data as any[]);
+    };
+    fetchData();
+  }, []);
 
   const filteredProducts = activeCategory === "all"
     ? products
-    : products.filter((p) => p.category === activeCategory);
+    : products.filter((p) => p.category_id === activeCategory);
+
+  const filterOptions = [
+    { value: "all", label: "All Products" },
+    ...categories.map((c) => ({ value: c.id, label: c.name })),
+  ];
 
   return (
     <section id="products" className="py-20">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
             Featured <span className="text-primary">Products</span>
@@ -30,9 +56,8 @@ const FeaturedProducts = () => {
             Discover our top-rated battery chargers, jump starters, and compressors trusted by professionals and enthusiasts worldwide.
           </p>
 
-          {/* Category Filters */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            {categories.map((cat) => (
+            {filterOptions.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
@@ -48,20 +73,20 @@ const FeaturedProducts = () => {
           </div>
         </div>
 
-        {/* Products Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}
-              image={product.image}
+              slug={product.slug}
+              image={product.image_url || "/placeholder.svg"}
               name={product.name}
               price={product.price}
-              originalPrice={product.originalPrice}
-              rating={product.rating}
-              reviews={product.reviews}
-              badge={product.badge}
-              stockQuantity={product.stockQuantity}
+              originalPrice={product.original_price ?? undefined}
+              rating={product.rating ?? 0}
+              reviews={product.reviews_count ?? 0}
+              badge={product.badge ?? undefined}
+              stockQuantity={product.stock_quantity}
             />
           ))}
         </div>
