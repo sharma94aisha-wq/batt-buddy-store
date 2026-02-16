@@ -42,7 +42,8 @@ const DeliveryMethodSelector = ({
   onPointSelected,
   currentTotal = 0,
 }: DeliveryMethodSelectorProps) => {
-  const freeShipping = currentTotal >= 40;
+  const freePickup = currentTotal >= 40;
+  const freeHome = currentTotal >= 80;
   const [widgetLoaded, setWidgetLoaded] = useState(false);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ const DeliveryMethodSelector = ({
               Pick up at a Packeta point near you
             </p>
           </div>
-          <span className={`text-sm font-semibold ${freeShipping ? "text-green-600" : ""}`}>{freeShipping ? "Free" : "€2.00"}</span>
+          <span className={`text-sm font-semibold ${freePickup ? "text-green-600" : ""}`}>{freePickup ? "Free" : "€2.00"}</span>
         </label>
 
         {value === "pickup" && (
@@ -145,7 +146,7 @@ const DeliveryMethodSelector = ({
               Delivered to your address in Slovakia
             </p>
           </div>
-          <span className={`text-sm font-semibold ${freeShipping ? "text-green-600" : ""}`}>{freeShipping ? "Free" : "€6.00"}</span>
+          <span className={`text-sm font-semibold ${freeHome ? "text-green-600" : ""}`}>{freeHome ? "Free" : "€6.00"}</span>
         </label>
       </RadioGroup>
     </div>

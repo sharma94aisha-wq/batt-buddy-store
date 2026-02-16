@@ -67,7 +67,8 @@ const Checkout = () => {
 
   const codFee = paymentMethod === "cod" ? 1 : 0;
   const shippingBase = deliveryMethod === "pickup" ? 2 : 6;
-  const shipping = finalPrice >= 40 ? 0 : shippingBase;
+  const freeThreshold = deliveryMethod === "pickup" ? 40 : 80;
+  const shipping = finalPrice >= freeThreshold ? 0 : shippingBase;
   const tax = finalPrice * 0.08;
   const orderTotal = finalPrice + shipping + tax + codFee;
 
@@ -248,7 +249,7 @@ const Checkout = () => {
 
                 {/* Free Shipping Progress */}
                 <div className="border-t border-border pt-4 mb-4">
-                  <FreeShippingProgress currentTotal={finalPrice} />
+                  <FreeShippingProgress currentTotal={finalPrice} deliveryMethod={deliveryMethod} />
                 </div>
 
                 {/* Promo Code */}
