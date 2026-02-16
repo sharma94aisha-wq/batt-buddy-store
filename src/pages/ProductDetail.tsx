@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { products } from "@/data/products";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChevronRight, Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus } from "lucide-react";
+import { Star, ShoppingCart, Truck, Shield, RotateCcw, Minus, Plus, Play } from "lucide-react";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +29,7 @@ const ProductDetail = () => {
     );
   }
 
+  const categoryLabel = product.category === "charger" ? "Chargers" : product.category === "jump-starter" ? "Jump Starters" : "Compressors";
   const allImages = product.images?.length ? product.images : [product.image, product.image, product.image];
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -44,36 +46,24 @@ const ProductDetail = () => {
       <Header />
       <main className="py-8">
         <div className="container mx-auto px-4">
-          {/* Breadcrumb */}
-          <nav className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
-            <ChevronRight className="h-4 w-4" />
-            <Link to={`/category/${product.category}`} className="hover:text-foreground transition-colors">
-              {product.category === "charger" ? "Chargers" : product.category === "jump-starter" ? "Jump Starters" : "Compressors"}
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-foreground line-clamp-1">{product.name}</span>
-          </nav>
+          <PageBreadcrumb items={[
+            { label: categoryLabel, href: `/category/${product.category}` },
+            { label: product.name },
+          ]} />
 
           {/* Product Section */}
           <div className="grid gap-8 lg:grid-cols-2">
             {/* Images */}
             <div className="space-y-4">
               <div className="overflow-hidden rounded-xl border border-border bg-card">
-                <img
-                  src={allImages[selectedImage]}
-                  alt={product.name}
-                  className="aspect-square w-full object-cover"
-                />
+                <img src={allImages[selectedImage]} alt={product.name} className="aspect-square w-full object-cover" />
               </div>
               <div className="flex gap-3">
                 {allImages.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`w-20 overflow-hidden rounded-lg border-2 transition-colors ${
-                      selectedImage === i ? "border-primary" : "border-border hover:border-primary/50"
-                    }`}
+                    className={`w-20 overflow-hidden rounded-lg border-2 transition-colors ${selectedImage === i ? "border-primary" : "border-border hover:border-primary/50"}`}
                   >
                     <img src={img} alt="" className="aspect-square w-full object-cover" />
                   </button>
@@ -88,47 +78,33 @@ const ProductDetail = () => {
                   {product.badge}
                 </span>
               )}
-
               <div>
                 <p className="text-sm text-muted-foreground">{product.brand}</p>
                 <h1 className="mt-1 font-display text-2xl font-bold text-foreground md:text-3xl">{product.name}</h1>
               </div>
-
               {/* Rating */}
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-5 w-5 ${
-                        i < Math.floor(product.rating) ? "fill-primary text-primary" : "fill-muted text-muted"
-                      }`}
-                    />
+                    <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
                   ))}
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  {product.rating} ({product.reviews} reviews)
-                </span>
+                <span className="text-sm text-muted-foreground">{product.rating} ({product.reviews} reviews)</span>
               </div>
-
               {/* Price */}
               <div className="flex items-baseline gap-3">
                 <span className="font-display text-3xl font-bold text-primary">${product.price.toFixed(2)}</span>
                 {product.originalPrice && (
                   <>
                     <span className="text-lg text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</span>
-                    <span className="rounded bg-destructive/10 px-2 py-0.5 text-sm font-semibold text-destructive">
-                      -{discount}%
-                    </span>
+                    <span className="rounded bg-destructive/10 px-2 py-0.5 text-sm font-semibold text-destructive">-{discount}%</span>
                   </>
                 )}
               </div>
-
               {/* Description */}
               <p className="text-muted-foreground leading-relaxed">
                 {product.description || `High-quality ${product.name.toLowerCase()} from ${product.brand}. Designed for professional and home use with advanced features for reliable performance.`}
               </p>
-
               {/* SKU & Stock */}
               <div className="flex items-center gap-6 text-sm">
                 <span className="text-muted-foreground">SKU: <span className="text-foreground">{product.sku || `SKU-${product.id.toString().padStart(4, "0")}`}</span></span>
@@ -136,37 +112,27 @@ const ProductDetail = () => {
                   {product.inStock !== false ? "● In Stock" : "● Out of Stock"}
                 </span>
               </div>
-
               {/* Quantity & Add to Cart */}
               <div className="flex items-center gap-4">
                 <div className="flex items-center rounded-lg border border-border">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 text-muted-foreground hover:text-foreground transition-colors">
-                    <Minus className="h-4 w-4" />
-                  </button>
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="p-3 text-muted-foreground hover:text-foreground transition-colors"><Minus className="h-4 w-4" /></button>
                   <span className="w-12 text-center font-medium text-foreground">{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)} className="p-3 text-muted-foreground hover:text-foreground transition-colors">
-                    <Plus className="h-4 w-4" />
-                  </button>
+                  <button onClick={() => setQuantity(quantity + 1)} className="p-3 text-muted-foreground hover:text-foreground transition-colors"><Plus className="h-4 w-4" /></button>
                 </div>
                 <Button variant="electric" size="lg" className="flex-1" onClick={handleAddToCart}>
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Add to Cart
+                  <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
                 </Button>
               </div>
-
               {/* Trust badges */}
               <div className="grid grid-cols-3 gap-4 rounded-xl border border-border bg-card p-4">
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <Truck className="h-5 w-5 text-primary" />
-                  <span className="text-xs text-muted-foreground">Free Shipping</span>
+                  <Truck className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">Free Shipping</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <Shield className="h-5 w-5 text-primary" />
-                  <span className="text-xs text-muted-foreground">2-Year Warranty</span>
+                  <Shield className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">2-Year Warranty</span>
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <RotateCcw className="h-5 w-5 text-primary" />
-                  <span className="text-xs text-muted-foreground">30-Day Returns</span>
+                  <RotateCcw className="h-5 w-5 text-primary" /><span className="text-xs text-muted-foreground">30-Day Returns</span>
                 </div>
               </div>
             </div>
@@ -177,6 +143,7 @@ const ProductDetail = () => {
             <TabsList className="w-full justify-start">
               <TabsTrigger value="specs">Specifications</TabsTrigger>
               <TabsTrigger value="description">Description</TabsTrigger>
+              <TabsTrigger value="media">Foto a video</TabsTrigger>
               <TabsTrigger value="reviews">Reviews ({product.reviews})</TabsTrigger>
             </TabsList>
 
@@ -218,6 +185,48 @@ const ProductDetail = () => {
               </div>
             </TabsContent>
 
+            {/* Foto a video Tab */}
+            <TabsContent value="media" className="mt-6">
+              <div className="rounded-xl border border-border bg-card p-6">
+                <h3 className="mb-4 font-display text-lg font-semibold text-foreground">Photos</h3>
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                  {allImages.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { setSelectedImage(i); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                      className="group overflow-hidden rounded-lg border border-border transition-all hover:border-primary hover:shadow-lg"
+                    >
+                      <img src={img} alt={`${product.name} - photo ${i + 1}`} className="aspect-square w-full object-cover transition-transform group-hover:scale-105" />
+                    </button>
+                  ))}
+                </div>
+
+                <h3 className="mb-4 mt-8 font-display text-lg font-semibold text-foreground">Videos</h3>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {/* Placeholder video cards */}
+                  {[
+                    { title: "Product Overview", duration: "2:45" },
+                    { title: "Installation Guide", duration: "5:12" },
+                  ].map((video, i) => (
+                    <div key={i} className="group relative overflow-hidden rounded-lg border border-border bg-muted/30">
+                      <div className="relative aspect-video w-full">
+                        <img src={product.image} alt={video.title} className="h-full w-full object-cover opacity-70" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform group-hover:scale-110">
+                            <Play className="h-6 w-6 ml-0.5" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-3">
+                        <p className="text-sm font-medium text-foreground">{video.title}</p>
+                        <p className="text-xs text-muted-foreground">{video.duration}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
             <TabsContent value="reviews" className="mt-6">
               <div className="rounded-xl border border-border bg-card p-6">
                 <div className="mb-6 flex items-center gap-4">
@@ -231,7 +240,6 @@ const ProductDetail = () => {
                     <p className="mt-1 text-xs text-muted-foreground">{product.reviews} reviews</p>
                   </div>
                 </div>
-                {/* Sample reviews */}
                 {[
                   { author: "John D.", date: "2 weeks ago", rating: 5, text: "Excellent product! Works exactly as described. Very reliable and easy to use." },
                   { author: "Sarah M.", date: "1 month ago", rating: 4, text: "Great value for the price. Solid build quality and performs well. Would recommend." },

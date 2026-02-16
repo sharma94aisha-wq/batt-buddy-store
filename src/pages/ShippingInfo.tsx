@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Truck, Clock, Globe, Package } from "lucide-react";
 
 const cards = [
@@ -14,6 +15,7 @@ const ShippingInfo = () => (
     <Header />
     <main className="py-12">
       <div className="container mx-auto max-w-3xl px-4">
+        <PageBreadcrumb items={[{ label: "Shipping Information" }]} />
         <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Shipping Information</h1>
         <p className="mt-2 text-muted-foreground">Everything you need to know about our shipping options and policies.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-2">

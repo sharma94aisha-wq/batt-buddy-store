@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +12,9 @@ const ContactUs = () => (
     <Header />
     <main className="py-12">
       <div className="container mx-auto px-4">
+        <PageBreadcrumb items={[{ label: "Contact Us" }]} />
         <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Contact Us</h1>
+        
         <p className="mt-2 text-muted-foreground">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-2">

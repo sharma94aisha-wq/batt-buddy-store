@@ -1,11 +1,13 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 const Returns = () => (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="py-12">
       <div className="container mx-auto max-w-3xl px-4">
+        <PageBreadcrumb items={[{ label: "Returns & Refunds" }]} />
         <h1 className="font-display text-3xl font-bold text-foreground md:text-4xl">Returns & Refunds</h1>
         <p className="mt-2 text-muted-foreground">Our hassle-free return policy is designed to keep you satisfied.</p>
         <div className="mt-8 space-y-6 text-sm text-muted-foreground">
