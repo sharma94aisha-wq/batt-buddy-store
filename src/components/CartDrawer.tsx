@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartContext";
 import { Minus, Plus, Trash2, ShoppingBag, Tag, X } from "lucide-react";
+import FreeShippingProgress from "@/components/FreeShippingProgress";
 
 const CartDrawer = () => {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ const CartDrawer = () => {
             </div>
 
             <div className="border-t border-border pt-4 space-y-4">
+              <FreeShippingProgress currentTotal={finalPrice} />
               {/* Promo Code */}
               {promoCode ? (
                 <div className="flex items-center justify-between rounded-lg border border-primary/30 bg-primary/5 px-3 py-2">
