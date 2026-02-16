@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
@@ -18,6 +20,20 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (isForgotPassword) {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success("Password reset email sent! Check your inbox.");
+        setIsForgotPassword(false);
+      }
+      setLoading(false);
+      return;
+    }
     
     if (isSignUp) {
       const { error } = await signUp(email, password);
@@ -48,7 +64,7 @@ const AdminLogin = () => {
             VOLT<span className="text-primary">CHARGE</span>
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isSignUp ? "Create admin account" : "Admin Dashboard Login"}
+            {isForgotPassword ? "Reset your password" : isSignUp ? "Create admin account" : "Admin Dashboard Login"}
           </p>
         </div>
 
@@ -64,31 +80,47 @@ const AdminLogin = () => {
               placeholder="admin@voltcharge.com"
             />
           </div>
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="••••••••"
-              minLength={6}
-            />
-          </div>
+          {!isForgotPassword && (
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                minLength={6}
+              />
+            </div>
+          )}
           <Button type="submit" variant="electric" className="w-full" disabled={loading}>
-            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
+            {loading ? "Loading..." : isForgotPassword ? "Send Reset Email" : isSignUp ? "Sign Up" : "Sign In"}
           </Button>
+          {!isSignUp && !isForgotPassword && (
+            <button
+              type="button"
+              onClick={() => setIsForgotPassword(true)}
+              className="w-full text-sm text-muted-foreground hover:text-primary"
+            >
+              Forgot password?
+            </button>
+          )}
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          {isSignUp ? "Already have an account?" : "Need an account?"}{" "}
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-primary hover:underline"
-          >
-            {isSignUp ? "Sign in" : "Sign up"}
-          </button>
+          {isForgotPassword ? (
+            <button onClick={() => setIsForgotPassword(false)} className="text-primary hover:underline">
+              Back to sign in
+            </button>
+          ) : (
+            <>
+              {isSignUp ? "Already have an account?" : "Need an account?"}{" "}
+              <button onClick={() => setIsSignUp(!isSignUp)} className="text-primary hover:underline">
+                {isSignUp ? "Sign in" : "Sign up"}
+              </button>
+            </>
+          )}
         </p>
 
         <div className="text-center">
