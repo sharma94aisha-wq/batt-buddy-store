@@ -177,9 +177,21 @@ const ProductDetail = () => {
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < Math.floor(product.rating ?? 0) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
-                  ))}
+                  {[...Array(5)].map((_, i) => {
+                    const r = product.rating ?? 0;
+                    const full = i < Math.floor(r);
+                    const half = !full && i < r;
+                    return half ? (
+                      <span key={i} className="relative h-5 w-5">
+                        <Star className="absolute inset-0 h-5 w-5 fill-muted text-muted" />
+                        <span className="absolute inset-0 overflow-hidden" style={{ width: "50%" }}>
+                          <Star className="h-5 w-5 fill-primary text-primary" />
+                        </span>
+                      </span>
+                    ) : (
+                      <Star key={i} className={`h-5 w-5 ${full ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
+                    );
+                  })}
                 </div>
                 <span className="text-sm text-muted-foreground">{product.rating ?? 0} ({product.reviews_count ?? 0} recenzií)</span>
               </div>
@@ -289,9 +301,21 @@ const ProductDetail = () => {
                   <div className="text-center">
                     <p className="font-display text-4xl font-bold text-foreground">{product.rating ?? 0}</p>
                     <div className="mt-1 flex items-center gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`h-4 w-4 ${i < Math.floor(product.rating ?? 0) ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
-                      ))}
+                      {[...Array(5)].map((_, i) => {
+                        const r = product.rating ?? 0;
+                        const full = i < Math.floor(r);
+                        const half = !full && i < r;
+                        return half ? (
+                          <span key={i} className="relative h-4 w-4">
+                            <Star className="absolute inset-0 h-4 w-4 fill-muted text-muted" />
+                            <span className="absolute inset-0 overflow-hidden" style={{ width: "50%" }}>
+                              <Star className="h-4 w-4 fill-primary text-primary" />
+                            </span>
+                          </span>
+                        ) : (
+                          <Star key={i} className={`h-4 w-4 ${full ? "fill-primary text-primary" : "fill-muted text-muted"}`} />
+                        );
+                      })}
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">{product.reviews_count ?? 0} recenzií</p>
                   </div>
