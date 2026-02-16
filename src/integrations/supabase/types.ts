@@ -50,6 +50,125 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          addons: Json | null
+          created_at: string
+          id: string
+          order_id: string
+          price: number
+          product_image: string | null
+          product_name: string
+          quantity: number
+        }
+        Insert: {
+          addons?: Json | null
+          created_at?: string
+          id?: string
+          order_id: string
+          price: number
+          product_image?: string | null
+          product_name: string
+          quantity?: number
+        }
+        Update: {
+          addons?: Json | null
+          created_at?: string
+          id?: string
+          order_id?: string
+          price?: number
+          product_image?: string | null
+          product_name?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          address: string | null
+          city: string | null
+          cod_fee: number
+          created_at: string
+          delivery_method: string
+          discount_amount: number
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          order_number: string
+          payment_method: string
+          phone: string
+          pickup_point_address: string | null
+          pickup_point_name: string | null
+          promo_code: string | null
+          shipping_cost: number
+          status: string
+          subtotal: number
+          tax: number
+          total: number
+          updated_at: string
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          cod_fee?: number
+          created_at?: string
+          delivery_method?: string
+          discount_amount?: number
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          order_number: string
+          payment_method?: string
+          phone: string
+          pickup_point_address?: string | null
+          pickup_point_name?: string | null
+          promo_code?: string | null
+          shipping_cost?: number
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          cod_fee?: number
+          created_at?: string
+          delivery_method?: string
+          discount_amount?: number
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          order_number?: string
+          payment_method?: string
+          phone?: string
+          pickup_point_address?: string | null
+          pickup_point_name?: string | null
+          promo_code?: string | null
+          shipping_cost?: number
+          status?: string
+          subtotal?: number
+          tax?: number
+          total?: number
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           content: string | null

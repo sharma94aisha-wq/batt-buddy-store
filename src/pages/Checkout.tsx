@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,11 +41,57 @@ const Checkout = () => {
       return;
     }
     setIsProcessing(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    clearCart();
-    toast.success("Order placed successfully!");
-    navigate("/order-confirmation");
-    setIsProcessing(false);
+    try {
+      const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}`;
+      const { data: order, error: orderError } = await supabase
+        .from("orders" as any)
+        .insert({
+          order_number: orderNumber,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          delivery_method: deliveryMethod,
+          pickup_point_name: selectedPoint?.name || null,
+          pickup_point_address: selectedPoint ? `${selectedPoint.street}, ${selectedPoint.city} ${selectedPoint.zip}` : null,
+          address: formData.address || null,
+          city: formData.city || null,
+          zip_code: formData.zipCode || null,
+          payment_method: paymentMethod,
+          subtotal: totalPrice,
+          discount_amount: discountAmount,
+          promo_code: promoCode?.code || null,
+          shipping_cost: shipping,
+          cod_fee: codFee,
+          tax,
+          total: orderTotal,
+          status: "pending",
+        } as any)
+        .select("id")
+        .single();
+
+      if (orderError) throw orderError;
+
+      const orderItems = items.map((item) => ({
+        order_id: (order as any).id,
+        product_name: item.name,
+        product_image: item.image,
+        quantity: item.quantity,
+        price: item.price,
+        addons: item.addons || [],
+      }));
+
+      const { error: itemsError } = await supabase.from("order_items" as any).insert(orderItems as any);
+      if (itemsError) throw itemsError;
+
+      clearCart();
+      toast.success("Order placed successfully!");
+      navigate("/order-confirmation");
+    } catch (err: any) {
+      toast.error("Failed to place order: " + err.message);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleApplyPromo = () => {
