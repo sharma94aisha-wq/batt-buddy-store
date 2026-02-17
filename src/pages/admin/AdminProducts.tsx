@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Pencil, Trash2, Upload, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, ImageIcon, Star, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface Product {
@@ -26,6 +26,14 @@ interface Product {
   sort_order: number;
   stock_quantity: number;
   category_id: string | null;
+}
+
+interface ProductImage {
+  id: string;
+  product_id: string;
+  image_url: string;
+  is_primary: boolean;
+  sort_order: number;
 }
 
 interface Category {
@@ -46,7 +54,11 @@ const AdminProducts = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [productImages, setProductImages] = useState<ProductImage[]>([]);
+  const [newImages, setNewImages] = useState<{ url: string; is_primary: boolean }[]>([]);
+  const [deletedImageIds, setDeletedImageIds] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const multiFileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchData = async () => {
     const [prodRes, catRes] = await Promise.all([
@@ -61,31 +73,80 @@ const AdminProducts = () => {
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleImageUpload = async (file: File) => {
+  const fetchProductImages = async (productId: string) => {
+    const { data, error } = await supabase
+      .from("product_images" as any)
+      .select("*")
+      .eq("product_id", productId)
+      .order("sort_order");
+    if (!error && data) setProductImages(data as any);
+    else setProductImages([]);
+  };
+
+  const handleMultiImageUpload = async (files: FileList) => {
     setUploading(true);
-    const ext = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
-    const { error } = await supabase.storage.from("product-images").upload(fileName, file);
-    if (error) {
-      toast.error("Upload failed: " + error.message);
-      setUploading(false);
-      return;
+    const uploaded: { url: string; is_primary: boolean }[] = [];
+    for (const file of Array.from(files)) {
+      const ext = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${ext}`;
+      const { error } = await supabase.storage.from("product-images").upload(fileName, file);
+      if (error) {
+        toast.error(`Upload failed for ${file.name}: ${error.message}`);
+        continue;
+      }
+      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
+      const hasPrimary = productImages.some(i => !deletedImageIds.includes(i.id) && i.is_primary) ||
+                          newImages.some(i => i.is_primary) ||
+                          uploaded.some(i => i.is_primary);
+      uploaded.push({ url: urlData.publicUrl, is_primary: !hasPrimary && uploaded.length === 0 && productImages.filter(i => !deletedImageIds.includes(i.id)).length === 0 && newImages.length === 0 });
     }
-    const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(fileName);
-    setEditing((prev) => prev ? { ...prev, image_url: urlData.publicUrl } : prev);
-    toast.success("Image uploaded");
+    setNewImages(prev => [...prev, ...uploaded]);
+    toast.success(`${uploaded.length} image(s) uploaded`);
     setUploading(false);
+  };
+
+  const handleSetPrimary = (type: "existing" | "new", index: number) => {
+    // Unset all existing
+    setProductImages(prev => prev.map(img => ({ ...img, is_primary: false })));
+    setNewImages(prev => prev.map(img => ({ ...img, is_primary: false })));
+    if (type === "existing") {
+      setProductImages(prev => prev.map((img, i) => i === index ? { ...img, is_primary: true } : img));
+    } else {
+      setNewImages(prev => prev.map((img, i) => i === index ? { ...img, is_primary: true } : img));
+    }
+  };
+
+  const handleRemoveExistingImage = (id: string) => {
+    setDeletedImageIds(prev => [...prev, id]);
+  };
+
+  const handleRemoveNewImage = (index: number) => {
+    setNewImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const getAllImages = () => {
+    const existing = productImages.filter(img => !deletedImageIds.includes(img.id));
+    return { existing, new: newImages };
   };
 
   const handleSave = async () => {
     if (!editing?.name) return toast.error("Name is required");
+
+    const allImgs = getAllImages();
+    // Determine primary image URL for the main product image_url field
+    const primaryExisting = allImgs.existing.find(i => i.is_primary);
+    const primaryNew = allImgs.new.find(i => i.is_primary);
+    const primaryUrl = primaryExisting?.image_url || primaryNew?.url ||
+                       allImgs.existing[0]?.image_url || allImgs.new[0]?.url ||
+                       editing.image_url || null;
+
     const payload = {
       name: editing.name,
       slug: editing.slug || editing.name.toLowerCase().replace(/\s+/g, "-"),
       description: editing.description || null,
       price: editing.price || 0,
       original_price: editing.original_price || null,
-      image_url: editing.image_url || null,
+      image_url: primaryUrl,
       badge: editing.badge || null,
       rating: editing.rating || 0,
       reviews_count: editing.reviews_count || 0,
@@ -95,17 +156,45 @@ const AdminProducts = () => {
       category_id: editing.category_id || null,
     };
 
+    let productId = editing.id;
+
     if (editing.id) {
       const { error } = await supabase.from("products" as any).update(payload).eq("id", editing.id);
       if (error) return toast.error(error.message);
-      toast.success("Product updated");
     } else {
-      const { error } = await supabase.from("products" as any).insert(payload);
+      const { data, error } = await supabase.from("products" as any).insert(payload).select("id").single();
       if (error) return toast.error(error.message);
-      toast.success("Product created");
+      productId = (data as any).id;
     }
+
+    // Delete removed images
+    if (deletedImageIds.length > 0) {
+      await supabase.from("product_images" as any).delete().in("id", deletedImageIds);
+    }
+
+    // Update is_primary for existing images
+    for (const img of allImgs.existing) {
+      await supabase.from("product_images" as any).update({ is_primary: img.is_primary }).eq("id", img.id);
+    }
+
+    // Insert new images
+    if (newImages.length > 0 && productId) {
+      const maxSort = Math.max(0, ...allImgs.existing.map(i => i.sort_order));
+      const inserts = newImages.map((img, i) => ({
+        product_id: productId,
+        image_url: img.url,
+        is_primary: img.is_primary,
+        sort_order: maxSort + i + 1,
+      }));
+      await supabase.from("product_images" as any).insert(inserts);
+    }
+
+    toast.success(editing.id ? "Product updated" : "Product created");
     setDialogOpen(false);
     setEditing(null);
+    setProductImages([]);
+    setNewImages([]);
+    setDeletedImageIds([]);
     fetchData();
   };
 
@@ -116,13 +205,28 @@ const AdminProducts = () => {
     else { toast.success("Product deleted"); fetchData(); }
   };
 
-  const openNew = () => { setEditing({ ...emptyProduct }); setDialogOpen(true); };
-  const openEdit = (p: Product) => { setEditing({ ...p }); setDialogOpen(true); };
+  const openNew = () => {
+    setEditing({ ...emptyProduct });
+    setProductImages([]);
+    setNewImages([]);
+    setDeletedImageIds([]);
+    setDialogOpen(true);
+  };
+
+  const openEdit = async (p: Product) => {
+    setEditing({ ...p });
+    setNewImages([]);
+    setDeletedImageIds([]);
+    await fetchProductImages(p.id);
+    setDialogOpen(true);
+  };
 
   const getCategoryName = (id: string | null) => {
     if (!id) return "—";
     return categories.find((c) => c.id === id)?.name || "—";
   };
+
+  const allImages = getAllImages();
 
   return (
     <div>
@@ -215,50 +319,99 @@ const AdminProducts = () => {
                 </div>
               </div>
 
-              {/* Image */}
+              {/* Images */}
               <div className="space-y-4">
-                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Image</h3>
-                <div className="flex items-start gap-4">
-                  {editing.image_url ? (
-                    <img src={editing.image_url} alt="Preview" className="h-24 w-24 rounded-lg object-cover border border-border" />
-                  ) : (
-                    <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-dashed border-border bg-muted">
-                      <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Images</h3>
+                <p className="text-xs text-muted-foreground">Click the star to set the main photo. The main photo will be used as the product thumbnail.</p>
+
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                  {/* Existing images */}
+                  {allImages.existing.map((img, i) => (
+                    <div key={img.id} className={`relative group rounded-lg border-2 overflow-hidden aspect-square ${img.is_primary ? "border-primary" : "border-border"}`}>
+                      <img src={img.image_url} alt="" className="h-full w-full object-cover" />
+                      {img.is_primary && (
+                        <div className="absolute top-1 left-1 rounded bg-primary px-1.5 py-0.5">
+                          <span className="text-[10px] font-bold text-primary-foreground">MAIN</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleSetPrimary("existing", productImages.findIndex(p => p.id === img.id))}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/90 text-primary-foreground hover:bg-primary"
+                          title="Set as main"
+                        >
+                          <Star className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveExistingImage(img.id)}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/90 text-destructive-foreground hover:bg-destructive"
+                          title="Remove"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex-1 space-y-2">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleImageUpload(file);
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploading}
-                      className="gap-2"
-                    >
-                      <Upload className="h-4 w-4" />
-                      {uploading ? "Uploading..." : "Upload Image"}
-                    </Button>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">Or enter URL</Label>
-                      <Input
-                        value={editing.image_url || ""}
-                        onChange={(e) => setEditing({ ...editing, image_url: e.target.value })}
-                        placeholder="https://..."
-                        className="mt-1"
-                      />
+                  ))}
+
+                  {/* New images */}
+                  {newImages.map((img, i) => (
+                    <div key={`new-${i}`} className={`relative group rounded-lg border-2 overflow-hidden aspect-square ${img.is_primary ? "border-primary" : "border-border"}`}>
+                      <img src={img.url} alt="" className="h-full w-full object-cover" />
+                      {img.is_primary && (
+                        <div className="absolute top-1 left-1 rounded bg-primary px-1.5 py-0.5">
+                          <span className="text-[10px] font-bold text-primary-foreground">MAIN</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleSetPrimary("new", i)}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/90 text-primary-foreground hover:bg-primary"
+                          title="Set as main"
+                        >
+                          <Star className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveNewImage(i)}
+                          className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/90 text-destructive-foreground hover:bg-destructive"
+                          title="Remove"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  ))}
+
+                  {/* Upload button */}
+                  <button
+                    type="button"
+                    onClick={() => multiFileInputRef.current?.click()}
+                    disabled={uploading}
+                    className="flex aspect-square items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/50 hover:border-primary/50 hover:bg-muted transition-colors"
+                  >
+                    <div className="flex flex-col items-center gap-1">
+                      <Upload className="h-5 w-5 text-muted-foreground" />
+                      <span className="text-[10px] text-muted-foreground">{uploading ? "Uploading..." : "Add Photos"}</span>
+                    </div>
+                  </button>
                 </div>
+
+                <input
+                  ref={multiFileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleMultiImageUpload(e.target.files);
+                      e.target.value = "";
+                    }
+                  }}
+                />
               </div>
 
               {/* Pricing & Stock */}
@@ -301,7 +454,7 @@ const AdminProducts = () => {
                 </div>
               </div>
 
-              {/* SEO */}
+              {/* Reviews */}
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Reviews</h3>
                 <div className="grid grid-cols-2 gap-4">
