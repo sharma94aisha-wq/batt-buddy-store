@@ -166,12 +166,6 @@ Deno.serve(async (req) => {
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      if (dbProduct.stock_quantity < item.quantity) {
-        return new Response(
-          JSON.stringify({ error: `Insufficient stock for ${dbProduct.name}` }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
     }
 
     // Calculate subtotal from DB prices (not client prices)
@@ -211,6 +205,30 @@ Deno.serve(async (req) => {
     // Generate order number
     const orderNumber = `ORD-${Date.now().toString(36).toUpperCase()}`;
 
+    // Atomically decrement stock BEFORE creating order
+    const decrementedItems: { productId: string; quantity: number }[] = [];
+    for (const item of items) {
+      const { data: success } = await supabase.rpc("decrement_stock", {
+        p_product_id: item.id,
+        p_quantity: item.quantity,
+      });
+      if (!success) {
+        // Rollback already decremented items
+        for (const dec of decrementedItems) {
+          await supabase.rpc("decrement_stock", {
+            p_product_id: dec.productId,
+            p_quantity: -dec.quantity,
+          });
+        }
+        const dbProduct = products.find((p: any) => p.id === item.id)!;
+        return new Response(
+          JSON.stringify({ error: `Produkt "${dbProduct.name}" nie je momentálne na sklade v požadovanom množstve.` }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      decrementedItems.push({ productId: item.id, quantity: item.quantity });
+    }
+
     // Insert order
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -242,6 +260,13 @@ Deno.serve(async (req) => {
 
     if (orderError) {
       console.error("Order insert error:", orderError);
+      // Rollback stock decrements
+      for (const dec of decrementedItems) {
+        await supabase.rpc("decrement_stock", {
+          p_product_id: dec.productId,
+          p_quantity: -dec.quantity,
+        });
+      }
       return new Response(
         JSON.stringify({ error: "Failed to create order" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -267,21 +292,18 @@ Deno.serve(async (req) => {
 
     if (itemsError) {
       console.error("Order items insert error:", itemsError);
-      // Clean up the order
+      // Clean up the order and rollback stock
       await supabase.from("orders").delete().eq("id", order.id);
+      for (const dec of decrementedItems) {
+        await supabase.rpc("decrement_stock", {
+          p_product_id: dec.productId,
+          p_quantity: -dec.quantity,
+        });
+      }
       return new Response(
         JSON.stringify({ error: "Failed to create order items" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
-    }
-
-    // Decrement stock
-    for (const item of items) {
-      const dbProduct = products.find((p: any) => p.id === item.id)!;
-      await supabase
-        .from("products")
-        .update({ stock_quantity: dbProduct.stock_quantity - item.quantity })
-        .eq("id", item.id);
     }
 
     return new Response(
