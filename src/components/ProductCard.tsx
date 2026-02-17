@@ -81,18 +81,9 @@ const ProductCard = ({ id, slug, image, name, price, originalPrice, rating, revi
         </div>
       )}
 
-      {user && (
-        <button
-          onClick={toggleBookmark}
-          className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-colors hover:bg-background"
-        >
-          <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-primary text-primary" : "text-muted-foreground"}`} />
-        </button>
-      )}
-
       {originalPrice && (
-        <div className="absolute left-3 top-12 z-10 rounded-lg bg-destructive/10 px-2.5 py-1">
-          <span className="text-sm font-semibold text-destructive">
+        <div className="absolute right-3 top-3 z-10 rounded-lg bg-primary px-2.5 py-1">
+          <span className="text-sm font-bold text-primary-foreground">
             -{Math.round(((originalPrice - price) / originalPrice) * 100)}%
           </span>
         </div>
