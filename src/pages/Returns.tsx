@@ -18,7 +18,7 @@ const Returns = () => (
           <section className="rounded-xl border border-border bg-card p-6 space-y-3">
             <h2 className="font-display text-lg font-semibold text-foreground">Ako iniciovať vrátenie</h2>
             <ol className="list-decimal space-y-1 pl-5">
-              <li>Kontaktujte náš tím podpory na podpora@voltcharge.sk alebo zavolajte na +421 900 123 456.</li>
+              <li>Kontaktujte náš tím podpory na podpora@autoprofi.sk alebo zavolajte na +421 900 123 456.</li>
               <li>Uveďte číslo objednávky a dôvod vrátenia.</li>
               <li>Dostanete predplatený štítok na vrátenie e-mailom.</li>
               <li>Odošlite tovar späť pomocou poskytnutého štítku.</li>

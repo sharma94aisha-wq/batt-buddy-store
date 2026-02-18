@@ -77,7 +77,7 @@ const AdminLogin = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@voltcharge.com"
+              placeholder="admin@autoprofi.com"
             />
           </div>
           {!isForgotPassword && (

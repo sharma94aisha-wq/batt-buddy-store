@@ -8,9 +8,9 @@ import { useEffect } from "react";
 
 const faqItems = [
   {
-    question: "Prečo si vybrať VoltCharge?",
+    question: "Prečo si vybrať AutoProfi?",
     answer:
-      "VoltCharge ponúka prémiové nabíjačky a príslušenstvo s 365-dňovou zárukou, expresným doručením v ten istý deň pri objednávke do 14:00 a bezplatným doručením do Z-BOXu alebo Z-POINTu pri objednávke nad 40 €. Kvalita, rýchlosť a spokojnosť zákazníkov sú naše priority.",
+      "AutoProfi ponúka prémiové nabíjačky a príslušenstvo s 365-dňovou zárukou, expresným doručením v ten istý deň pri objednávke do 14:00 a bezplatným doručením do Z-BOXu alebo Z-POINTu pri objednávke nad 40 €. Kvalita, rýchlosť a spokojnosť zákazníkov sú naše priority.",
   },
   {
     question: "Aké platobné metódy akceptujete?",
@@ -67,7 +67,7 @@ const HomeFAQ = () => {
           Často kladené otázky
         </h2>
         <p className="mt-2 text-center text-muted-foreground">
-          Všetko, čo potrebujete vedieť o VoltCharge
+          Všetko, čo potrebujete vedieť o AutoProfi
         </p>
         <div className="mx-auto mt-10 max-w-2xl">
           <Accordion type="single" collapsible className="space-y-3">

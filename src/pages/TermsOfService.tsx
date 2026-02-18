@@ -12,7 +12,7 @@ const TermsOfService = () => (
         <p className="mt-2 text-sm text-muted-foreground">Posledná aktualizácia: 15. februára 2026</p>
         <div className="mt-8 space-y-6 text-sm leading-relaxed text-muted-foreground">
           {[
-            { t: "Prijatie podmienok", p: "Prístupom a používaním webovej stránky VoltCharge súhlasíte s týmito Obchodnými podmienkami. Ak nesúhlasíte, prosím nepoužívajte naše služby." },
+            { t: "Prijatie podmienok", p: "Prístupom a používaním webovej stránky AutoProfi súhlasíte s týmito Obchodnými podmienkami. Ak nesúhlasíte, prosím nepoužívajte naše služby." },
             { t: "Produkty a ceny", p: "Všetky ceny sú uvedené v EUR a môžu sa zmeniť bez predchádzajúceho upozornenia. Vyhradzujeme si právo obmedziť množstvá a kedykoľvek stiahnuť akýkoľvek produkt. Chyby v cenách budú opravené a objednávky môžu byť v prípade potreby zrušené." },
             { t: "Objednávky a platby", p: "Zadaním objednávky potvrdzujete, že všetky poskytnuté informácie sú správne. Akceptujeme hlavné kreditné karty a ďalšie platobné metódy zobrazené pri pokladni. Objednávky podliehajú akceptácii a dostupnosti." },
             { t: "Duševné vlastníctvo", p: "Všetok obsah na tejto webovej stránke vrátane textov, grafiky, log a obrázkov je majetkom VoltCharge a je chránený autorským právom a zákonmi o ochranných známkach." },

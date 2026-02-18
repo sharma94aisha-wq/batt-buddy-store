@@ -16,7 +16,7 @@ const CookiePolicy = () => (
             { t: "Aké cookies používame", p: "Používame nevyhnutné cookies (potrebné pre fungovanie stránky), analytické cookies (na pochopenie správania návštevníkov) a marketingové cookies (na doručovanie relevantných reklám). Nevyhnutné cookies nie je možné vypnúť." },
             { t: "Cookies tretích strán", p: "Niektoré cookies sú umiestnené službami tretích strán, ako sú poskytovatelia analytických nástrojov a platobné brány. Tieto cookies sa riadia zásadami ochrany osobných údajov príslušnej tretej strany." },
             { t: "Správa cookies", p: "Cookies môžete spravovať alebo vymazať prostredníctvom nastavení prehliadača. Vypnutie určitých cookies môže ovplyvniť funkčnosť stránky. Pokyny nájdete v sekcii nápovedy vášho prehliadača." },
-            { t: "Kontakt", p: "Pre otázky o našich zásadách cookies nás kontaktujte na podpora@voltcharge.sk." },
+            { t: "Kontakt", p: "Pre otázky o našich zásadách cookies nás kontaktujte na podpora@autoprofi.sk." },
           ].map(({ t, p }) => (
             <section key={t} className="rounded-xl border border-border bg-card p-6 space-y-2">
               <h2 className="font-display text-lg font-semibold text-foreground">{t}</h2>

@@ -17,7 +17,7 @@ const PrivacyPolicy = () => (
             { t: "Bezpečnosť údajov", p: "Implementujeme bezpečnostné opatrenia podľa priemyselných štandardov vrátane SSL šifrovania, bezpečného spracovania platieb a pravidelných bezpečnostných auditov na ochranu vašich osobných údajov." },
             { t: "Cookies", p: "Používame cookies a podobné technológie na zlepšenie vášho zážitku z prehliadania, analýzu návštevnosti stránok a personalizáciu obsahu. Nastavenia cookies môžete ovládať cez preferencie prehliadača." },
             { t: "Vaše práva", p: "Máte právo na prístup, opravu alebo vymazanie vašich osobných údajov. Môžete sa tiež kedykoľvek odhlásiť z marketingovej komunikácie kliknutím na odkaz na odhlásenie v našich e-mailoch." },
-            { t: "Kontaktujte nás", p: "Ak máte otázky k týmto zásadám, kontaktujte nás na podpora@voltcharge.sk alebo zavolajte na +421 900 123 456." },
+            { t: "Kontaktujte nás", p: "Ak máte otázky k týmto zásadám, kontaktujte nás na podpora@autoprofi.sk alebo zavolajte na +421 900 123 456." },
           ].map(({ t, p }) => (
             <section key={t} className="rounded-xl border border-border bg-card p-6 space-y-2">
               <h2 className="font-display text-lg font-semibold text-foreground">{t}</h2>
