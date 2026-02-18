@@ -89,6 +89,7 @@ const ProductDetail = () => {
   const { id: slugParam } = useParams<{ id: string }>();
   const { addToCart } = useCart();
   const [product, setProduct] = useState<DBProduct | null>(null);
+  const [productImages, setProductImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -108,7 +109,31 @@ const ProductDetail = () => {
         data = res.data;
       }
       
-      setProduct(data as unknown as DBProduct | null);
+      const prod = data as unknown as DBProduct | null;
+      setProduct(prod);
+
+      // Fetch additional images from product_images table
+      if (prod) {
+        const { data: images } = await supabase
+          .from("product_images")
+          .select("image_url, is_primary, sort_order")
+          .eq("product_id", prod.id)
+          .order("sort_order", { ascending: true });
+
+        if (images && images.length > 0) {
+          // Put primary image first, then rest by sort_order
+          const sorted = [...images].sort((a, b) => {
+            if (a.is_primary && !b.is_primary) return -1;
+            if (!a.is_primary && b.is_primary) return 1;
+            return a.sort_order - b.sort_order;
+          });
+          setProductImages(sorted.map((i) => i.image_url));
+        } else {
+          setProductImages([prod.image_url || "/placeholder.svg"]);
+        }
+      }
+
+      setSelectedImage(0);
       setLoading(false);
     };
     fetchProduct();
@@ -139,7 +164,7 @@ const ProductDetail = () => {
     );
   }
 
-  const allImages = [product.image_url || "/placeholder.svg"];
+  const allImages = productImages.length > 0 ? productImages : [product.image_url || "/placeholder.svg"];
   const discount = product.original_price
     ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : 0;
@@ -182,6 +207,21 @@ const ProductDetail = () => {
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 <img src={allImages[selectedImage]} alt={product.name} className="aspect-square w-full object-cover" />
               </div>
+              {allImages.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-1">
+                  {allImages.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedImage(i)}
+                      className={`flex-shrink-0 overflow-hidden rounded-lg border-2 transition-colors ${
+                        i === selectedImage ? "border-primary" : "border-border hover:border-muted-foreground"
+                      }`}
+                    >
+                      <img src={img} alt={`${product.name} ${i + 1}`} className="h-16 w-16 object-cover sm:h-20 sm:w-20" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="space-y-6">
