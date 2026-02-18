@@ -32,7 +32,7 @@ const AccountLayout = () => {
                 <Zap className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="font-display text-lg font-bold">
-                VOLT<span className="text-primary">CHARGE</span>
+                AUTO<span className="text-primary">PROFI</span>
               </span>
             </div>
           </div>

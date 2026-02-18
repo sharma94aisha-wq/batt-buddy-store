@@ -39,7 +39,7 @@ const Features = () => {
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
           <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Prečo si vybrať <span className="text-primary">VoltCharge</span>
+            Prečo si vybrať <span className="text-primary">AutoProfi</span>
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
             Sme odhodlaní poskytovať najlepšie produkty a služby v odvetví.

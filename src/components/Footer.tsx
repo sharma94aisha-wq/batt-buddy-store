@@ -12,7 +12,7 @@ const Footer = () => {
                 <Zap className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="font-display text-xl font-bold tracking-wide text-foreground">
-                VOLT<span className="text-primary">CHARGE</span>
+                AUTO<span className="text-primary">PROFI</span>
               </span>
             </Link>
             <p className="mb-4 text-sm text-muted-foreground">
@@ -49,7 +49,7 @@ const Footer = () => {
           <div>
             <h3 className="mb-4 font-display text-sm font-semibold uppercase tracking-wider text-foreground">Kontakt</h3>
             <ul className="space-y-2">
-              <li className="text-sm text-muted-foreground">podpora@voltcharge.sk</li>
+              <li className="text-sm text-muted-foreground">podpora@autoprofi.sk</li>
               <li className="text-sm text-muted-foreground">Po–Pi: 8:00 – 20:00</li>
               <li className="text-sm text-muted-foreground">So–Ne: 9:00 – 17:00</li>
             </ul>
@@ -57,7 +57,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-sm text-muted-foreground">© 2026 VoltCharge. Všetky práva vyhradené.</p>
+          <p className="text-sm text-muted-foreground">© 2026 AutoProfi. Všetky práva vyhradené.</p>
           <div className="flex gap-6">
             <Link to="/privacy" className="text-xs text-muted-foreground transition-colors hover:text-primary">Ochrana osobných údajov</Link>
             <Link to="/terms" className="text-xs text-muted-foreground transition-colors hover:text-primary">Obchodné podmienky</Link>

@@ -30,7 +30,7 @@ const ShippingInfo = () => (
         <div className="mt-8 rounded-xl border border-border bg-card p-6 text-sm text-muted-foreground space-y-3">
           <h2 className="font-display text-lg font-semibold text-foreground">Podrobnosti o doručení</h2>
           <p>Objednávky zadané pred 14:00 v pracovné dni sú spracované v ten istý deň. Objednávky zadané po 14:00 alebo cez víkend budú spracované nasledujúci pracovný deň.</p>
-          <p>Doby doručenia sú odhady a môžu sa líšiť v dôsledku oneskorení prepravcu, počasia alebo obdobia vysokého dopytu. VoltCharge nezodpovedá za oneskorenia po odovzdaní balíka prepravcovi.</p>
+          <p>Doby doručenia sú odhady a môžu sa líšiť v dôsledku oneskorení prepravcu, počasia alebo obdobia vysokého dopytu. AutoProfi nezodpovedá za oneskorenia po odovzdaní balíka prepravcovi.</p>
           <p>Ak vaša objednávka dorazí poškodená, kontaktujte nás do 48 hodín s fotografiami, aby sme mohli zabezpečiť výmenu.</p>
         </div>
       </div>

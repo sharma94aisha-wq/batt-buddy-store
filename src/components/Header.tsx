@@ -34,7 +34,7 @@ const Header = () => {
                 <Zap className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="font-display text-xl font-bold tracking-wide text-foreground">
-                VOLT<span className="text-primary">CHARGE</span>
+                AUTO<span className="text-primary">PROFI</span>
               </span>
             </a>
 
