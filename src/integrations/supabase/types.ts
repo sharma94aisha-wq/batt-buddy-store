@@ -109,6 +109,30 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_code: {
+        Row: {
+          code: string
+          id: string
+          is_active: boolean
+          location: string
+          updated_at: string
+        }
+        Insert: {
+          code?: string
+          id?: string
+          is_active?: boolean
+          location: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          id?: string
+          is_active?: boolean
+          location?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           addons: Json | null
