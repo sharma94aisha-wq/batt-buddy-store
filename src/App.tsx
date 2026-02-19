@@ -24,6 +24,7 @@ import AdminContent from "./pages/admin/AdminContent";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminSEO from "./pages/admin/AdminSEO";
+import AdminCustomCode from "./pages/admin/AdminCustomCode";
 import AccountLayout from "./pages/account/AccountLayout";
 import AccountProfile from "./pages/account/AccountProfile";
 import AccountBookmarks from "./pages/account/AccountBookmarks";
@@ -39,8 +40,14 @@ import TermsOfService from "./pages/TermsOfService";
 import CookiePolicy from "./pages/CookiePolicy";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
+import { useCustomCode } from "./hooks/useCustomCode";
 
 const queryClient = new QueryClient();
+
+const CustomCodeInjector = () => {
+  useCustomCode();
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -50,6 +57,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <CustomCodeInjector />
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
@@ -77,6 +85,7 @@ const App = () => (
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="messages" element={<AdminMessages />} />
                 <Route path="seo" element={<AdminSEO />} />
+                <Route path="custom-code" element={<AdminCustomCode />} />
               </Route>
               <Route path="/account" element={<AccountRoute><AccountLayout /></AccountRoute>}>
                 <Route index element={<AccountProfile />} />
