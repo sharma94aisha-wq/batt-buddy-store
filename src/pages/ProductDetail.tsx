@@ -25,6 +25,8 @@ interface DBProduct {
   stock_quantity: number;
   category_id: string | null;
   description: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
 }
 
 const SuggestedProducts = ({ categoryId, currentId }: { categoryId: string | null; currentId: string }) => {
@@ -135,6 +137,21 @@ const ProductDetail = () => {
 
       setSelectedImage(0);
       setLoading(false);
+
+      // Apply SEO metadata
+      if (prod) {
+        document.title = prod.seo_title || prod.name;
+        const descMeta = document.querySelector('meta[name="description"]');
+        const desc = prod.seo_description || prod.description || "";
+        if (descMeta) {
+          descMeta.setAttribute("content", desc);
+        } else if (desc) {
+          const meta = document.createElement("meta");
+          meta.name = "description";
+          meta.content = desc;
+          document.head.appendChild(meta);
+        }
+      }
     };
     fetchProduct();
   }, [slugParam]);

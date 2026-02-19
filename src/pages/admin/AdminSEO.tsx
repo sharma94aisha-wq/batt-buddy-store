@@ -24,22 +24,34 @@ interface CMSPage {
   meta_description: string | null;
 }
 
+interface ProductSEO {
+  id: string;
+  name: string;
+  slug: string;
+  seo_title: string | null;
+  seo_description: string | null;
+}
+
 const AdminSEO = () => {
   const [fixedPages, setFixedPages] = useState<PageSEO[]>([]);
   const [cmsPages, setCmsPages] = useState<CMSPage[]>([]);
+  const [productPages, setProductPages] = useState<ProductSEO[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editType, setEditType] = useState<"fixed" | "cms">("fixed");
+  const [editType, setEditType] = useState<"fixed" | "cms" | "product">("fixed");
   const [editingFixed, setEditingFixed] = useState<PageSEO | null>(null);
   const [editingCms, setEditingCms] = useState<CMSPage | null>(null);
+  const [editingProduct, setEditingProduct] = useState<ProductSEO | null>(null);
 
   const fetchData = async () => {
-    const [seoRes, pagesRes] = await Promise.all([
+    const [seoRes, pagesRes, productsRes] = await Promise.all([
       supabase.from("page_seo").select("*").order("page_label"),
       supabase.from("pages").select("id, title, slug, meta_description").order("title"),
+      supabase.from("products").select("id, name, slug, seo_title, seo_description").order("name"),
     ]);
     if (seoRes.data) setFixedPages(seoRes.data as PageSEO[]);
     if (pagesRes.data) setCmsPages(pagesRes.data as CMSPage[]);
+    if (productsRes.data) setProductPages(productsRes.data as unknown as ProductSEO[]);
     setLoading(false);
   };
 
@@ -81,6 +93,24 @@ const AdminSEO = () => {
     setDialogOpen(true);
   };
 
+  const handleSaveProduct = async () => {
+    if (!editingProduct) return;
+    const { error } = await supabase
+      .from("products")
+      .update({ seo_title: editingProduct.seo_title, seo_description: editingProduct.seo_description } as any)
+      .eq("id", editingProduct.id);
+    if (error) return toast.error(error.message);
+    toast.success("SEO updated");
+    setDialogOpen(false);
+    fetchData();
+  };
+
+  const openProductEdit = (p: ProductSEO) => {
+    setEditType("product");
+    setEditingProduct({ ...p });
+    setDialogOpen(true);
+  };
+
   return (
     <div>
       <h1 className="font-display text-2xl font-bold text-foreground mb-6">SEO Management</h1>
@@ -90,6 +120,7 @@ const AdminSEO = () => {
           <TabsList>
             <TabsTrigger value="fixed">Site Pages</TabsTrigger>
             <TabsTrigger value="cms">CMS Pages</TabsTrigger>
+            <TabsTrigger value="products">Products</TabsTrigger>
           </TabsList>
 
           <TabsContent value="fixed">
@@ -152,14 +183,45 @@ const AdminSEO = () => {
               </Table>
             </div>
           </TabsContent>
+          <TabsContent value="products">
+            <div className="rounded-lg border border-border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Product</TableHead>
+                    <TableHead>SEO Title</TableHead>
+                    <TableHead>SEO Description</TableHead>
+                    <TableHead className="w-16">Edit</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {productPages.map((p) => (
+                    <TableRow key={p.id}>
+                      <TableCell className="font-medium">{p.name}</TableCell>
+                      <TableCell className="max-w-[200px] truncate text-muted-foreground">{p.seo_title || "—"}</TableCell>
+                      <TableCell className="max-w-[300px] truncate text-muted-foreground">{p.seo_description || "—"}</TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="icon" onClick={() => openProductEdit(p)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {productPages.length === 0 && (
+                    <TableRow><TableCell colSpan={4} className="text-center text-muted-foreground py-8">No products yet</TableCell></TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </TabsContent>
         </Tabs>
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
-              {editType === "fixed" ? `Edit SEO — ${editingFixed?.page_label}` : `Edit SEO — ${editingCms?.title}`}
+          <DialogTitle>
+              {editType === "fixed" ? `Edit SEO — ${editingFixed?.page_label}` : editType === "cms" ? `Edit SEO — ${editingCms?.title}` : `Edit SEO — ${editingProduct?.name}`}
             </DialogTitle>
           </DialogHeader>
           {editType === "fixed" && editingFixed && (
@@ -190,6 +252,21 @@ const AdminSEO = () => {
                 <p className="text-xs text-muted-foreground mt-1">{(editingCms.meta_description || "").length}/160</p>
               </div>
               <Button variant="electric" className="w-full" onClick={handleSaveCms}>Save</Button>
+            </div>
+          )}
+          {editType === "product" && editingProduct && (
+            <div className="space-y-4">
+              <div>
+                <Label>SEO Title <span className="text-xs text-muted-foreground">(max 60 chars)</span></Label>
+                <Input maxLength={60} value={editingProduct.seo_title || ""} onChange={(e) => setEditingProduct({ ...editingProduct, seo_title: e.target.value })} />
+                <p className="text-xs text-muted-foreground mt-1">{(editingProduct.seo_title || "").length}/60</p>
+              </div>
+              <div>
+                <Label>SEO Description <span className="text-xs text-muted-foreground">(max 160 chars)</span></Label>
+                <Input maxLength={160} value={editingProduct.seo_description || ""} onChange={(e) => setEditingProduct({ ...editingProduct, seo_description: e.target.value })} />
+                <p className="text-xs text-muted-foreground mt-1">{(editingProduct.seo_description || "").length}/160</p>
+              </div>
+              <Button variant="electric" className="w-full" onClick={handleSaveProduct}>Save</Button>
             </div>
           )}
         </DialogContent>
