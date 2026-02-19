@@ -23,6 +23,7 @@ import AdminPages from "./pages/admin/AdminPages";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminMessages from "./pages/admin/AdminMessages";
+import AdminSEO from "./pages/admin/AdminSEO";
 import AccountLayout from "./pages/account/AccountLayout";
 import AccountProfile from "./pages/account/AccountProfile";
 import AccountBookmarks from "./pages/account/AccountBookmarks";
@@ -75,6 +76,7 @@ const App = () => (
                 <Route path="content" element={<AdminContent />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="messages" element={<AdminMessages />} />
+                <Route path="seo" element={<AdminSEO />} />
               </Route>
               <Route path="/account" element={<AccountRoute><AccountLayout /></AccountRoute>}>
                 <Route index element={<AccountProfile />} />

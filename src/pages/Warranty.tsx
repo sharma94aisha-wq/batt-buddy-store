@@ -2,8 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Shield } from "lucide-react";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
-const Warranty = () => (
+const Warranty = () => {
+  usePageSEO("warranty", "Záruka | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -45,5 +48,6 @@ const Warranty = () => (
     <Footer />
   </div>
 );
+};
 
 export default Warranty;
