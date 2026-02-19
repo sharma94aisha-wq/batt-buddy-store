@@ -73,19 +73,19 @@ const Hero = () => {
               <img
                 src={heroImage}
                 alt="Profesionálna 12V nabíjačka autobatérie"
-                className="relative z-10 w-full rounded-2xl shadow-product"
-              />
+                className="relative z-10 w-full rounded-2xl shadow-product" />
+
             </div>
             
             <div className="absolute -bottom-4 -left-4 z-20 rounded-xl border border-border bg-card p-4 shadow-card">
               <p className="text-xs text-muted-foreground">Už od</p>
-              <p className="font-display text-2xl font-bold text-primary">€49,99</p>
+              <p className="font-display text-2xl font-bold text-primary">€19,99</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 };
 
 export default Hero;
