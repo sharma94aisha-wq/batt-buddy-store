@@ -1,4 +1,4 @@
-import { Package, Grid3X3, FileText, Layout, LogOut, Home, ShoppingCart, MessageSquare } from "lucide-react";
+import { Package, Grid3X3, FileText, Layout, LogOut, Home, ShoppingCart, MessageSquare, Search } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ const items = [
   { title: "Categories", url: "/admin/categories", icon: Grid3X3 },
   { title: "Pages", url: "/admin/pages", icon: FileText },
   { title: "Site Content", url: "/admin/content", icon: Layout },
+  { title: "SEO", url: "/admin/seo", icon: Search },
 ];
 
 export function AdminSidebar() {

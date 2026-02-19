@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
-const TermsOfService = () => (
+const TermsOfService = () => {
+  usePageSEO("terms", "Obchodné podmienky | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -30,5 +33,6 @@ const TermsOfService = () => (
     <Footer />
   </div>
 );
+};
 
 export default TermsOfService;

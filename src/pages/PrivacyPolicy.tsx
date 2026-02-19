@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
-const PrivacyPolicy = () => (
+const PrivacyPolicy = () => {
+  usePageSEO("privacy", "Ochrana osobných údajov | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -30,5 +33,6 @@ const PrivacyPolicy = () => (
     <Footer />
   </div>
 );
+};
 
 export default PrivacyPolicy;

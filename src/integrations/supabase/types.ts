@@ -231,6 +231,36 @@ export type Database = {
         }
         Relationships: []
       }
+      page_seo: {
+        Row: {
+          created_at: string
+          id: string
+          page_key: string
+          page_label: string
+          seo_description: string | null
+          seo_title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_key: string
+          page_label: string
+          seo_description?: string | null
+          seo_title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_key?: string
+          page_label?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           content: string | null

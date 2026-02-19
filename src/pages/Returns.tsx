@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
-const Returns = () => (
+const Returns = () => {
+  usePageSEO("returns", "Vrátenie tovaru | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -35,5 +38,6 @@ const Returns = () => (
     <Footer />
   </div>
 );
+};
 
 export default Returns;

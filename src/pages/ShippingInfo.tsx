@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Truck, Clock, Globe, Package } from "lucide-react";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
 const cards = [
   { icon: Truck, title: "Štandardné doručenie", desc: "3–5 pracovných dní. Zadarmo pri objednávke nad 40 €." },
@@ -10,7 +11,9 @@ const cards = [
   { icon: Package, title: "Sledovanie objednávky", desc: "Sledovacie číslo vám zašleme e-mailom po odoslaní objednávky." },
 ];
 
-const ShippingInfo = () => (
+const ShippingInfo = () => {
+  usePageSEO("shipping", "Doručenie | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -38,5 +41,6 @@ const ShippingInfo = () => (
     <Footer />
   </div>
 );
+};
 
 export default ShippingInfo;

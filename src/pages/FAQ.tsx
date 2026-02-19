@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
+import { usePageSEO } from "@/hooks/usePageSEO";
 const faqs = [
   { q: "Aké typy batérií môžem nabíjať vašimi nabíjačkami?", a: "Naše nabíjačky podporujú olovené, AGM, gélové, lítiovo-iónové a LiFePO4 batérie. Presné informácie o kompatibilite nájdete v špecifikáciách produktu." },
   { q: "Ako dlho trvá doručenie?", a: "Štandardné doručenie trvá 3–5 pracovných dní. Expresné doručenie (1–2 pracovné dni) je k dispozícii pri objednávke." },
@@ -14,7 +14,9 @@ const faqs = [
   { q: "Doručujete aj do zahraničia?", a: "Momentálne doručujeme na Slovensko a do Českej republiky. Medzinárodné doručenie pripravujeme." },
 ];
 
-const FAQ = () => (
+const FAQ = () => {
+  usePageSEO("faq", "FAQ | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -35,5 +37,6 @@ const FAQ = () => (
     <Footer />
   </div>
 );
+};
 
 export default FAQ;

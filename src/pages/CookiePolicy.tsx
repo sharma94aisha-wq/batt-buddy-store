@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
-const CookiePolicy = () => (
+const CookiePolicy = () => {
+  usePageSEO("cookies", "Zásady cookies | AutoProfi");
+  return (
   <div className="min-h-screen bg-background">
     <Header />
     <main className="pt-24 pb-12">
@@ -29,5 +32,6 @@ const CookiePolicy = () => (
     <Footer />
   </div>
 );
+};
 
 export default CookiePolicy;
